@@ -42,11 +42,12 @@
     return 'Erro do GitHub (' + status + '). ' + (msg || '');
   }
   async function gh(path, { method = 'GET', body, raw = false } = {}) {
-    const r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${path}`, {
+    let r;
+    try { r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}${path ? '/' + path : ''}`, {
       method,
       headers: Object.assign({ Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json', Authorization: 'Bearer ' + cfg.token, 'X-GitHub-Api-Version': '2022-11-28' }, body ? { 'Content-Type': 'application/json' } : {}),
       body: body ? JSON.stringify(body) : undefined,
-    });
+    }); } catch { throw new Error('Não foi possível falar com o GitHub. Verifique a internet e se alguma extensão (bloqueador de anúncios) ou antivírus está bloqueando api.github.com.'); }
     if (!r.ok) { let m = ''; try { m = (await r.json()).message; } catch { /* sem corpo */ } const e = new Error(friendly(r.status, m)); e.status = r.status; throw e; }
     if (r.status === 204) return null;
     return raw ? r.text() : r.json();
