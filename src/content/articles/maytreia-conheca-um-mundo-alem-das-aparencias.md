@@ -2,6 +2,7 @@
 title: "Maytréia: conheça um mundo além das aparências"
 description: "E se o mundo em que vivemos fosse apenas uma pequena parte da realidade? E se, por trás de acontecimentos aparentemente comuns, existisse uma guerra silenciosa pela consciência da humanidade?\n\nEssa é uma das propostas de Maytréia, um RPG de autoconhecimento, espiritualidade, mistério e transformação"
 date: 2026-11-04
+updated: 2026-11-04
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia","Maytreia HQ"]
@@ -50,9 +51,9 @@ format: "html"
 
 <p>Tudo isso enquanto uma história maior começa a se desenrolar.</p>
 
-<h2>Uma página de cada vez</h2>
+<h2>Uma parte de cada vez</h2>
 
-<p>A HQ será publicada aqui no blog <strong>uma página por vez</strong>, permitindo que os leitores acompanhem gradualmente a história e descubram, junto dos protagonistas, os mistérios de Maytréia.</p>
+<p>A HQ será publicada aqui no blog <strong>em blocos</strong>, permitindo que os leitores acompanhem gradualmente a história e descubram, junto dos protagonistas, os mistérios de Maytréia.</p>
 
 <p>A cada nova publicação, avançaremos um pouco mais nesse universo, explorando seus personagens, suas ideias e os conflitos que acontecem por trás da realidade cotidiana.</p>
 
