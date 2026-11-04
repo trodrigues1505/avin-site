@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import HeroArt from '../components/HeroArt.astro';
+import { Image } from 'astro:assets';
+import capa from '../assets/capa.png';
 import ArticleRow from '../components/ArticleRow.astro';
 import ToolCard from '../components/ToolCard.astro';
 import SupportBlock from '../components/SupportBlock.astro';
@@ -13,17 +14,19 @@ const tools = (await getTools()).filter((t) => t.data.featured).slice(0, 3);
 const adventures = (await getAdventures()).slice(0, 3);
 ---
 <Base>
+  <section class="cover wrap">
+    <h1 class="sr-only">Aventuras Inacabadas</h1>
+    <Image src={capa} alt="Aventuras Inacabadas: histórias, sistemas e ferramentas de RPG. Um mapa antigo com bússola, dados poliédricos e um livro de couro." widths={[640, 960, 1280, 1600, 2000]} sizes="(max-width: 1168px) 100vw, 1120px" loading="eager" fetchpriority="high" />
+  </section>
+
   <section class="hero">
     <div class="wrap">
-      <div>
-        <h1>Material de RPG de mesa pronto para jogar</h1>
-        <p class="lead">Dicas de RPG de mesa, criação de personagens, campanhas e guias para iniciantes. Menos promessa, mais material na mesa.</p>
-        <div class="actions">
-          <a class="btn primary" href={url('artigos/')}>Ler os artigos</a>
-          <a class="btn" href={url('ferramentas/')}>Ver ferramentas</a>
-        </div>
+      <h2 class="hero-title">Material de RPG de mesa pronto para jogar</h2>
+      <p class="lead">Dicas de RPG de mesa, criação de personagens, campanhas e guias para iniciantes. Menos promessa, mais material na mesa.</p>
+      <div class="actions">
+        <a class="btn primary" href={url('artigos/')}>Ler os artigos</a>
+        <a class="btn" href={url('ferramentas/')}>Ver ferramentas</a>
       </div>
-      <div class="hero-art"><HeroArt /></div>
     </div>
   </section>
 

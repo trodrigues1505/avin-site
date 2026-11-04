@@ -22,14 +22,14 @@ O endereço não está escrito no código. Ele vem de duas variáveis de ambient
 
 | Situação | SITE_URL | BASE_PATH |
 |---|---|---|
-| Endereço padrão do GitHub Pages | `https://usuario.github.io` | `/nome-do-repositorio` |
+| Endereço padrão do GitHub Pages | `https://trodrigues1505.github.io` | `/avin-site` |
 | Domínio ou subdomínio próprio | `https://avin.exemplo.org` | `/` |
 | Desenvolvimento local | (vazio) | (vazio) |
 
 Teste local com o caminho do GitHub Pages:
 
 ```bash
-SITE_URL=https://usuario.github.io BASE_PATH=/repositorio npm run build && BASE_PATH=/repositorio npm run check:links
+SITE_URL=https://trodrigues1505.github.io BASE_PATH=/avin-site npm run build && BASE_PATH=/avin-site npm run check:links
 ```
 
 No GitHub, defina essas variáveis em Settings > Secrets and variables > Actions > Variables.

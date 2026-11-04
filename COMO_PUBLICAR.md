@@ -81,10 +81,9 @@ Se o build falhar, a versão publicada anterior continua no ar.
 No GitHub, abra o arquivo, clique em **History**, escolha a versão anterior e restaure (ou use **Revert** no commit).
 O novo deploy acontece sozinho.
 
-## 9. Trocar a capa e o logotipo provisórios
+## 9. Trocar a capa
 
-A ilustração da home é um SVG provisório em `src/components/HeroArt.astro` e a marca é `src/components/Logo.astro`.
-Quando houver arte final, substitua esses dois arquivos (e `public/favicon.svg`, `public/og-default.png`).
+A capa da home é `src/assets/capa.png` (troque o arquivo mantendo o nome). A imagem de compartilhamento `public/og-default.png` é gerada dela com `node scripts/make-og.mjs`. O emblema do cabeçalho é `src/assets/emblema.png`, o logo do rodapé é `src/assets/logo-completo.png` e o ícone da aba é `public/favicon.png`.
 
 ## CMS visual?
 

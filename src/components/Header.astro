@@ -1,8 +1,9 @@
 ---
 import { NAV, SITE } from '../config/site';
 import { url } from '../lib/url';
-import Logo from './Logo.astro';
 import Icon from './Icon.astro';
+import { Image } from 'astro:assets';
+import emblema from '../assets/emblema.png';
 const path = Astro.url.pathname;
 const isActive = (href: string) => {
   const full = url(href);
@@ -12,7 +13,7 @@ const isActive = (href: string) => {
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href={url()} aria-label={`${SITE.name}, página inicial`}>
-      <Logo /><span class="brand-name">{SITE.name}</span>
+      <Image class="brand-mark" src={emblema} alt="" width={80} height={80} loading="eager" /><span class="brand-name">{SITE.name}</span>
     </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
       <Icon name="menu" size={20} /> Menu

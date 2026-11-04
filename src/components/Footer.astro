@@ -1,13 +1,15 @@
 ---
 import { NAV, SITE } from '../config/site';
 import { url } from '../lib/url';
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-completo.png';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <h2>{SITE.name}</h2>
+        <Image class="footer-logo" src={logo} alt={SITE.name} width={320} loading="lazy" />
         <p class="muted small" style="max-width:38ch">Material de RPG de mesa pronto para jogar: aventuras, fichas, regras caseiras e ferramentas, com espaço para RPGs nacionais e sistemas menos explorados.</p>
       </div>
       <nav aria-label="Rodapé">
