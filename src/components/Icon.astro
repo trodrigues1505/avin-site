@@ -1,0 +1,16 @@
+---
+// Ícones em traço único, estilo consistente (24x24, stroke 1.6).
+const { name, size = 22 } = Astro.props;
+const paths: Record<string, string> = {
+  dice: '<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1" fill="currentColor"/>',
+  scroll: '<path d="M8 4h11v13a3 3 0 0 1-3 3H7a3 3 0 0 0 3-3V4Z"/><path d="M8 4a3 3 0 0 0-3 3v1h5"/><path d="M13 9h3M13 13h3"/>',
+  map: '<path d="M3 6.5 9 4l6 2.5L21 4v13.5L15 20l-6-2.5L3 20V6.5Z"/><path d="M9 4v13.5M15 6.5V20"/>',
+  book: '<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5v-15Z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/>',
+  sword: '<path d="m14.5 4.5 5-1-1 5-9 9-4-4 9-9Z"/><path d="m5.5 14.5 4 4M4 20l2.5-2.5"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  download: '<path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M5 19h14"/>',
+  external: '<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/>',
+  heart: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.600-7 10-7 10Z"/>',
+};
+---
+<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={paths[name]} />

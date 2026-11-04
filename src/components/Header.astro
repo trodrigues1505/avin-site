@@ -1,0 +1,40 @@
+---
+import { NAV, SITE } from '../config/site';
+import { url } from '../lib/url';
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+const path = Astro.url.pathname;
+const isActive = (href: string) => {
+  const full = url(href);
+  return href === '' ? path === full : path.startsWith(full);
+};
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href={url()} aria-label={`${SITE.name}, página inicial`}>
+      <Logo /><span class="brand-name">{SITE.name}</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <Icon name="menu" size={20} /> Menu
+    </button>
+    <nav id="site-nav" class="nav" aria-label="Principal">
+      {NAV.map((i) => <a href={url(i.href)} aria-current={isActive(i.href) ? 'page' : undefined}>{i.label}</a>)}
+      <a class="btn" href={url('apoie/')} aria-current={isActive('apoie/') ? 'page' : undefined}>Apoie o projeto</a>
+    </nav>
+  </div>
+</header>
+<script>
+  const btn = document.querySelector('.menu-toggle');
+  const nav = document.getElementById('site-nav');
+  btn?.addEventListener('click', () => {
+    const open = nav!.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && nav?.classList.contains('open')) {
+      nav.classList.remove('open');
+      btn?.setAttribute('aria-expanded', 'false');
+      (btn as HTMLElement)?.focus();
+    }
+  });
+</script>

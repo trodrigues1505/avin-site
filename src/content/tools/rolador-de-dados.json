@@ -1,0 +1,11 @@
+{
+  "name": "Rolador de dados",
+  "description": "Aplicativo de demonstração da arquitetura: rola dados de 4 a 100 faces, soma modificadores e guarda o histórico no seu navegador.",
+  "category": "Utilitário",
+  "icon": "dice",
+  "folder": "rolador-de-dados",
+  "featured": true,
+  "demo": true,
+  "needsBackend": false,
+  "order": 1
+}

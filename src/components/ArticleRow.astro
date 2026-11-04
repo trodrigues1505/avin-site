@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import { url, fmtDate, readingTime, slugify } from '../lib/url';
+const { entry } = Astro.props;
+const d = entry.data;
+const href = url(`artigos/${entry.id}/`);
+---
+<li class="post-row">
+  {d.cover && (
+    <a class="thumb" href={href} tabindex="-1" aria-hidden="true">
+      <Image src={d.cover} alt="" width={480} loading="lazy" />
+    </a>
+  )}
+  <div style={d.cover ? undefined : 'grid-column:1/-1'}>
+    <div class="meta">
+      <time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time>
+      <span>{readingTime(entry.body ?? '')} min de leitura</span>
+      <span>{d.category}</span>
+    </div>
+    <h3><a href={href}>{d.title}</a></h3>
+    <p class="muted">{d.description}</p>
+    {d.tags.length > 0 && (
+      <ul class="tags">{d.tags.map((t: string) => <li><a class="tag" href={url(`etiquetas/${slugify(t)}/`)}>{t}</a></li>)}</ul>
+    )}
+  </div>
+</li>

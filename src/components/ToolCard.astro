@@ -1,0 +1,15 @@
+---
+import Icon from './Icon.astro';
+import { url } from '../lib/url';
+const { tool } = Astro.props;
+const d = tool.data;
+---
+<article class="tool">
+  <div class="ico"><Icon name={d.icon} size={24} /></div>
+  <h3><a href={url(`ferramentas/${tool.id}/`)}>{d.name}</a></h3>
+  <p>{d.description}</p>
+  <div class="foot">
+    <span class="badge">{d.demo ? 'Demonstração' : d.category}</span>
+    <a class="btn" href={url(`ferramentas/${tool.id}/`)}>Abrir</a>
+  </div>
+</article>

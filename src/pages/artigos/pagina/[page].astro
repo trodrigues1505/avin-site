@@ -1,0 +1,25 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArticleRow from '../../../components/ArticleRow.astro';
+import { getArticles, PAGE_SIZE } from '../../../lib/content';
+import { url } from '../../../lib/url';
+export async function getStaticPaths() {
+  const all = await getArticles();
+  const pages = Math.ceil(all.length / PAGE_SIZE);
+  return Array.from({ length: Math.max(0, pages - 1) }, (_, i) => {
+    const n = i + 2;
+    return { params: { page: String(n) }, props: { n, pages, items: all.slice((n - 1) * PAGE_SIZE, n * PAGE_SIZE) } };
+  });
+}
+const { n, pages, items } = Astro.props;
+---
+<Base title={`Artigos, página ${n}`}>
+  <div class="wrap">
+    <div class="page-head"><h1>Artigos</h1><p>Página {n} de {pages}</p></div>
+    <ul class="post-list">{items.map((a) => <ArticleRow entry={a} />)}</ul>
+    <nav class="pager" aria-label="Paginação">
+      <a class="btn" href={url(n === 2 ? 'artigos/' : `artigos/pagina/${n - 1}/`)}>Página anterior</a>
+      {n < pages ? <a class="btn" href={url(`artigos/pagina/${n + 1}/`)}>Próxima página</a> : <span></span>}
+    </nav>
+  </div>
+</Base>

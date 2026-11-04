@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import HeroArt from '../components/HeroArt.astro';
+import ArticleRow from '../components/ArticleRow.astro';
+import ToolCard from '../components/ToolCard.astro';
+import SupportBlock from '../components/SupportBlock.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { getArticles, getTools, getAdventures } from '../lib/content';
+import { url } from '../lib/url';
+
+const articles = (await getArticles()).slice(0, 3);
+const tools = (await getTools()).filter((t) => t.data.featured).slice(0, 3);
+const adventures = (await getAdventures()).slice(0, 3);
+---
+<Base>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Material de RPG de mesa pronto para jogar</h1>
+        <p class="lead">Dicas de RPG de mesa, criação de personagens, campanhas e guias para iniciantes. Menos promessa, mais material na mesa.</p>
+        <div class="actions">
+          <a class="btn primary" href={url('artigos/')}>Ler os artigos</a>
+          <a class="btn" href={url('ferramentas/')}>Ver ferramentas</a>
+        </div>
+      </div>
+      <div class="hero-art"><HeroArt /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head"><h2>Artigos recentes</h2><a href={url('artigos/')}>Todos os artigos</a></div>
+      {articles.length
+        ? <ul class="post-list">{articles.map((a) => <ArticleRow entry={a} />)}</ul>
+        : <EmptyState icon="scroll" title="Nenhum artigo ainda">Os primeiros textos aparecem aqui assim que forem publicados.</EmptyState>}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head"><h2>Ferramentas em destaque</h2><a href={url('ferramentas/')}>Todas as ferramentas</a></div>
+      {tools.length
+        ? <div class="tool-grid">{tools.map((t) => <ToolCard tool={t} />)}</div>
+        : <EmptyState icon="dice" title="Ferramentas a caminho">Os aplicativos de RPG do projeto serão listados aqui.</EmptyState>}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head"><h2>Aventuras e materiais</h2><a href={url('aventuras/')}>Ver aventuras</a></div>
+      {adventures.length
+        ? <ul class="post-list">{adventures.map((a) => <li class="post-row"><div style="grid-column:1/-1"><h3><a href={url(`aventuras/${a.id}/`)}>{a.data.title}</a></h3><p class="muted">{a.data.description}</p></div></li>)}</ul>
+        : <EmptyState icon="map" title="Aventuras em preparo">Aventuras completas, personagens prontos e cenários serão publicados nesta área.</EmptyState>}
+    </div>
+  </section>
+
+  <section class="section"><div class="wrap"><SupportBlock /></div></section>
+</Base>

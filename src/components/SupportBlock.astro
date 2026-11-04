@@ -1,0 +1,17 @@
+---
+import { SITE } from '../config/site';
+import { url } from '../lib/url';
+const { compact = false } = Astro.props;
+---
+<aside class="support" aria-label="Apoie o projeto">
+  <div>
+    <h3>Gostou do material?</h3>
+    <p>{compact
+      ? 'O projeto é mantido com o apoio de quem joga. Conheça os níveis de apoio no Apoia-se.'
+      : 'O conteúdo base continua gratuito. Quem apoia no Apoia-se ajuda a manter o projeto vivo e recebe materiais extras.'}</p>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <a class="btn primary" href={SITE.supportUrl} rel="noopener">Apoiar no Apoia-se</a>
+    {!compact && <a class="btn ghost" href={url('apoie/')}>Saiba mais</a>}
+  </div>
+</aside>

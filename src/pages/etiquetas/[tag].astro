@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleRow from '../../components/ArticleRow.astro';
+import { getArticles } from '../../lib/content';
+import { slugify, url } from '../../lib/url';
+export async function getStaticPaths() {
+  const all = await getArticles();
+  const map = new Map<string, { label: string; items: typeof all }>();
+  for (const a of all) for (const t of a.data.tags) {
+    const k = slugify(t);
+    if (!map.has(k)) map.set(k, { label: t, items: [] });
+    map.get(k)!.items.push(a);
+  }
+  return [...map].map(([tag, v]) => ({ params: { tag }, props: v }));
+}
+const { label, items } = Astro.props;
+---
+<Base title={`Etiqueta: ${label}`} description={`Artigos marcados com ${label}.`}>
+  <div class="wrap">
+    <div class="page-head"><p class="small"><a href={url('artigos/')}>Artigos</a></p><h1>{label}</h1></div>
+    <ul class="post-list">{items.map((a) => <ArticleRow entry={a} />)}</ul>
+  </div>
+</Base>

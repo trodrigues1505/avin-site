@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import EmptyState from '../components/EmptyState.astro';
+import Icon from '../components/Icon.astro';
+import { getLibrary } from '../lib/content';
+import { url } from '../lib/url';
+const items = await getLibrary();
+---
+<Base title="Biblioteca" description="PDFs, fichas e recursos de RPG de mesa para baixar.">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Biblioteca</h1>
+      <p>PDFs, fichas e recursos para baixar e usar na mesa.</p>
+    </div>
+    {items.length
+      ? <div class="tool-grid">{items.map((i) => (
+          <article class="tool">
+            <div class="ico"><Icon name="book" size={24} /></div>
+            <h3>{i.data.title}</h3>
+            <p>{i.data.description}</p>
+            <div class="foot">
+              <span class="badge">{i.data.kind}</span>
+              <a class="btn" href={url(`biblioteca/${i.data.file}`)} download><Icon name="download" size={18} /> Baixar</a>
+            </div>
+          </article>))}</div>
+      : <EmptyState icon="book" title="Biblioteca vazia por enquanto">Quando houver PDFs, fichas e recursos disponíveis, eles ficarão aqui para download.</EmptyState>}
+  </div>
+</Base>

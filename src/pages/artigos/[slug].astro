@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SupportBlock from '../../components/SupportBlock.astro';
+import ArticleRow from '../../components/ArticleRow.astro';
+import { getArticles } from '../../lib/content';
+import { url, fmtDate, readingTime, slugify } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const all = await getArticles();
+  return all.map((entry) => ({ params: { slug: entry.id }, props: { entry, all } }));
+}
+const { entry, all } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const related = all
+  .filter((a) => a.id !== entry.id && (a.data.category === d.category || a.data.tags.some((t: string) => d.tags.includes(t))))
+  .slice(0, 2);
+---
+<Base title={d.title} description={d.description} type="article" published={d.date} image={d.cover?.src}>
+  <article>
+    <header class="wrap article-head">
+      <div class="narrow">
+        <p class="small"><a href={url('artigos/')}>Artigos</a></p>
+        <h1>{d.title}</h1>
+        <div class="meta">
+          <span>Por {d.author}</span>
+          <time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time>
+          <span>{readingTime(entry.body ?? '')} min de leitura</span>
+          <span>{d.category}</span>
+        </div>
+        {d.tags.length > 0 && <ul class="tags">{d.tags.map((t: string) => <li><a class="tag" href={url(`etiquetas/${slugify(t)}/`)}>{t}</a></li>)}</ul>}
+      </div>
+    </header>
+    {d.cover && (
+      <figure class="wrap article-cover" style="margin-inline:auto">
+        <Image src={d.cover} alt={d.coverAlt ?? ''} widths={[480, 720, 960]} sizes="(max-width: 900px) 100vw, 900px" loading="eager" />
+      </figure>
+    )}
+    <div class="wrap">
+      <div class="prose"><Content /></div>
+      <div class="article-foot">
+        <SupportBlock compact />
+        {d.originalUrl && <p class="small muted" style="margin-top:24px">Publicado originalmente em <a href={d.originalUrl} rel="noopener">aventurasinacabadas.blogspot.com</a>.</p>}
+      </div>
+      {related.length > 0 && (
+        <section class="section" aria-labelledby="rel">
+          <div class="sec-head"><h2 id="rel">Leia também</h2></div>
+          <ul class="post-list">{related.map((a) => <ArticleRow entry={a} />)}</ul>
+        </section>
+      )}
+    </div>
+  </article>
+</Base>

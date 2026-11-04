@@ -1,0 +1,9 @@
+---
+import Icon from './Icon.astro';
+const { icon = 'book', title, children } = Astro.props;
+---
+<div class="empty">
+  <Icon name={icon} size={34} />
+  <h3>{title}</h3>
+  <p><slot /></p>
+</div>

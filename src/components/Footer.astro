@@ -1,0 +1,28 @@
+---
+import { NAV, SITE } from '../config/site';
+import { url } from '../lib/url';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h2>{SITE.name}</h2>
+        <p class="muted small" style="max-width:38ch">Material de RPG de mesa pronto para jogar: aventuras, fichas, regras caseiras e ferramentas, com espaço para RPGs nacionais e sistemas menos explorados.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <h2>Navegação</h2>
+        <ul>{NAV.map((i) => <li><a href={url(i.href)}>{i.label}</a></li>)}</ul>
+      </nav>
+      <div>
+        <h2>Projeto</h2>
+        <ul>
+          <li><a href={url('apoie/')}>Apoie o projeto</a></li>
+          <li><a href={SITE.supportUrl} rel="noopener">Apoia-se</a></li>
+          <li><a href={url('artigos/')}>Todos os artigos</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer-bottom">© {year} {SITE.author}. Texto e conteúdo publicados no {SITE.name}.</p>
+  </div>
+</footer>

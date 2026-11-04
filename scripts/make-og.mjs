@@ -1,0 +1,3 @@
+import sharp from 'sharp';
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#fff"/><rect x="40" y="40" width="1120" height="550" rx="20" fill="#faf9f6" stroke="#e8e8e5"/><g fill="none" stroke="#927554" stroke-width="3" stroke-linejoin="round" transform="translate(100 120) scale(3.4)"><path d="M16 2.5 28 9.5v13L16 29.5 4 22.5v-13L16 2.5Z"/><path d="M16 9.5 22.5 21h-13L16 9.5Z"/></g><text x="100" y="400" font-family="Georgia,serif" font-size="84" fill="#262626">Aventuras Inacabadas</text><text x="100" y="470" font-family="Helvetica,Arial,sans-serif" font-size="34" fill="#5f5f5f">Material de RPG de mesa pronto para jogar</text></svg>`;
+await sharp(Buffer.from(svg)).png().toFile('public/og-default.png');

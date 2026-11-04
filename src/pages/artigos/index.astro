@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArticleRow from '../../components/ArticleRow.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { getArticles, PAGE_SIZE } from '../../lib/content';
+import { url } from '../../lib/url';
+const all = await getArticles();
+const items = all.slice(0, PAGE_SIZE);
+const pages = Math.ceil(all.length / PAGE_SIZE);
+---
+<Base title="Artigos" description="Artigos sobre RPG de mesa: projetos, sistemas, aventuras e ideias para jogar.">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Artigos</h1>
+      <p>Textos sobre RPG de mesa, projetos e material para usar na sua mesa.</p>
+    </div>
+    {items.length
+      ? <ul class="post-list">{items.map((a) => <ArticleRow entry={a} />)}</ul>
+      : <EmptyState icon="scroll" title="Nenhum artigo ainda">Os textos publicados aparecem aqui.</EmptyState>}
+    {pages > 1 && <nav class="pager" aria-label="Paginação"><span></span><a class="btn" href={url('artigos/pagina/2/')}>Próxima página</a></nav>}
+  </div>
+</Base>

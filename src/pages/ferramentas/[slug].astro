@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getTools } from '../../lib/content';
+import { url } from '../../lib/url';
+export async function getStaticPaths() {
+  const tools = await getTools();
+  return tools.map((tool) => ({ params: { slug: tool.id }, props: { tool } }));
+}
+const { tool } = Astro.props;
+const d = tool.data;
+const appUrl = d.folder ? url(`apps/${d.folder}/`) : d.externalUrl;
+---
+<Base title={d.name} description={d.description}>
+  <div class="wrap">
+    <div class="page-head">
+      <p class="small"><a href={url('ferramentas/')}>Ferramentas</a></p>
+      <h1>{d.name}</h1>
+      <p>{d.description}</p>
+      {d.demo && <p class="notice">Este é um aplicativo de demonstração, criado para provar que a arquitetura de ferramentas funciona. Não é um dos aplicativos do projeto.</p>}
+      {d.needsBackend && <p class="notice">Este aplicativo depende de um serviço externo para funcionar.</p>}
+    </div>
+    {d.folder
+      ? <>
+          <div class="tool-frame"><iframe src={appUrl} title={d.name} loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-downloads allow-popups"></iframe></div>
+          <p style="margin-top:16px"><a class="btn" href={appUrl}><Icon name="external" size={18} /> Abrir em tela cheia</a></p>
+        </>
+      : <p><a class="btn primary" href={appUrl} rel="noopener"><Icon name="external" size={18} /> Abrir {d.name}</a></p>}
+  </div>
+</Base>

@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import SupportBlock from '../../components/SupportBlock.astro';
+import { getTools } from '../../lib/content';
+const tools = await getTools();
+---
+<Base title="Ferramentas" description="Aplicativos e geradores de RPG de mesa que funcionam direto no navegador, no computador ou no celular.">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Ferramentas</h1>
+      <p>Aplicativos de RPG que funcionam direto no navegador, no computador ou no celular.</p>
+    </div>
+    {tools.length
+      ? <div class="tool-grid">{tools.map((t) => <ToolCard tool={t} />)}</div>
+      : <EmptyState icon="dice" title="Nenhuma ferramenta ainda">Os aplicativos serão listados aqui.</EmptyState>}
+    <div style="margin-top:72px"><SupportBlock compact /></div>
+  </div>
+</Base>

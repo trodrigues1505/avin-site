@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { getAdventures } from '../lib/content';
+import { url, fmtDate } from '../lib/url';
+const items = await getAdventures();
+---
+<Base title="Aventuras" description="Aventuras prontas para jogar, personagens e cenários de RPG de mesa.">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Aventuras</h1>
+      <p>Aventuras completas, personagens prontos e cenários para levar à mesa.</p>
+    </div>
+    {items.length
+      ? <ul class="post-list">{items.map((a) => (
+          <li class="post-row"><div style="grid-column:1/-1">
+            <div class="meta"><time datetime={a.data.date.toISOString()}>{fmtDate(a.data.date)}</time>{a.data.system && <span>{a.data.system}</span>}</div>
+            <h3><a href={url(`aventuras/${a.id}/`)}>{a.data.title}</a></h3>
+            <p class="muted">{a.data.description}</p>
+          </div></li>))}</ul>
+      : <EmptyState icon="map" title="Aventuras em preparo">As aventuras publicadas aparecerão aqui, com descrição e materiais relacionados.</EmptyState>}
+  </div>
+</Base>

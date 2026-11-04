@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { SITE } from '../config/site';
+import { url } from '../lib/url';
+---
+<Base title="Apoie o projeto" description="Apoie o Aventuras Inacabadas no Apoia-se e receba aventuras prontas, materiais exclusivos e ferramentas avançadas.">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Apoie o Aventuras Inacabadas</h1>
+      <p>Se você gosta de RPG, mas não tem tempo pra preparar sessões, esse projeto é pra você.</p>
+    </div>
+    <div class="prose" style="margin-inline:0">
+      <p>O <strong>Aventuras Inacabadas</strong> existe com um objetivo simples: te entregar material pronto pra jogar.</p>
+      <h2>O que você encontra aqui</h2>
+      <ul>
+        <li>aventuras completas</li><li>personagens prontos</li><li>NPCs e criaturas</li>
+        <li>sistemas e mecânicas</li><li>ferramentas (geradores, apps, etc.)</li>
+      </ul>
+      <p>Tudo pensado pra você abrir e usar na sua mesa.</p>
+      <h2>Por que apoiar?</h2>
+      <p>Criar conteúdo de RPG leva tempo:</p>
+      <ul><li>escrever</li><li>testar</li><li>equilibrar</li><li>organizar</li></ul>
+      <p>O seu apoio permite que eu:</p>
+      <ul><li>produza mais conteúdo</li><li>melhore a qualidade</li><li>crie ferramentas mais úteis</li><li>mantenha consistência nas entregas</li></ul>
+      <h2>O que você recebe</h2>
+      <p>Ao apoiar no Apoia.se você ganha acesso a:</p>
+      <ul><li>aventuras prontas pra jogar</li><li>materiais exclusivos</li><li>conteúdos antecipados</li><li>ferramentas e recursos avançados</li></ul>
+      <h2>Simples assim</h2>
+      <p>Eu preparo tudo. Você joga.</p>
+    </div>
+    <p style="margin-top:32px"><a class="btn primary" href={SITE.supportUrl} rel="noopener"><Icon name="heart" size={18} /> Apoiar o Aventuras Inacabadas</a></p>
+    <h2 style="margin-top:72px">Quer testar antes?</h2>
+    <p class="muted" style="max-width:56ch">Você pode conferir conteúdos gratuitos no site e ver como o material funciona na prática.</p>
+    <p><a class="btn" href={url('artigos/')}>Ler os artigos gratuitos</a></p>
+  </div>
+</Base>

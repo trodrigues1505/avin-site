@@ -1,0 +1,23 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getAdventures } from '../../lib/content';
+import { url, fmtDate } from '../../lib/url';
+export async function getStaticPaths() {
+  const all = await getAdventures();
+  return all.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Base title={d.title} description={d.description}>
+  <article class="wrap">
+    <header class="article-head"><div class="narrow">
+      <p class="small"><a href={url('aventuras/')}>Aventuras</a></p>
+      <h1>{d.title}</h1>
+      <div class="meta"><time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time>{d.system && <span>{d.system}</span>}</div>
+    </div></header>
+    <div class="prose"><Content /></div>
+  </article>
+</Base>

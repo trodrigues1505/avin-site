@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../lib/url';
+---
+<Base title="Página não encontrada" noindex>
+  <div class="wrap" style="padding-block:72px">
+    <div class="empty">
+      <Icon name="map" size={34} />
+      <h1 style="font-size:1.75rem">Esta rota não está no mapa</h1>
+      <p>A página que você procurou não existe ou mudou de lugar. Volte ao início ou veja os artigos.</p>
+    </div>
+    <p style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="btn primary" href={url()}>Ir para o início</a>
+      <a class="btn" href={url('artigos/')}>Ver artigos</a>
+    </p>
+  </div>
+</Base>
