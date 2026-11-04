@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Editor de postagens</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-in">
+      <strong class="title">Editor de postagens</strong>
+      <nav class="top-nav">
+        <a href="../" class="plain">Ver o site</a>
+        <button type="button" id="btn-conn" class="ghost">Conexão</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <!-- Conexão -->
+    <section data-view="conn" hidden>
+      <h1>Conectar ao GitHub</h1>
+      <p class="muted">O editor grava as postagens direto no seu repositório, usando um token de acesso pessoal. O token fica apenas neste navegador e só é enviado ao GitHub.</p>
+      <form id="conn-form" class="card stack" autocomplete="off">
+        <div class="row2">
+          <label>Usuário<input id="c-owner" required></label>
+          <label>Repositório<input id="c-repo" required></label>
+        </div>
+        <label>Branch<input id="c-branch" value="main" required></label>
+        <label>Token de acesso pessoal
+          <input id="c-token" type="password" required placeholder="github_pat_..." spellcheck="false">
+        </label>
+        <details>
+          <summary>Como criar o token (uma vez)</summary>
+          <ol class="steps">
+            <li>No GitHub: foto do perfil → <b>Settings</b> → <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</li>
+            <li>Nome: <i>editor-avin</i>. Validade: a maior que o GitHub permitir.</li>
+            <li><b>Repository access</b>: <i>Only select repositories</i> e escolha só o repositório do site.</li>
+            <li><b>Permissions → Repository permissions → Contents: Read and write</b>. Nenhuma outra.</li>
+            <li>Gere, copie o token (aparece uma vez) e cole acima.</li>
+          </ol>
+          <p class="muted small">Use só em computador ou celular seu. Em "Sair" o token é apagado deste navegador.</p>
+        </details>
+        <div class="actions">
+          <button class="primary" type="submit">Conectar</button>
+          <button type="button" id="btn-logout" class="ghost" hidden>Sair e apagar token</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Lista -->
+    <section data-view="list" hidden>
+      <div class="bar">
+        <h1>Postagens</h1>
+        <button class="primary" type="button" id="btn-new">Nova postagem</button>
+      </div>
+      <div id="post-list" class="list" aria-live="polite"></div>
+    </section>
+
+    <!-- Editor -->
+    <section data-view="edit" hidden>
+      <div class="bar">
+        <button type="button" class="ghost" id="btn-back">← Postagens</button>
+        <span id="status" class="muted small"></span>
+      </div>
+
+      <div class="card stack">
+        <label>Título<input id="f-title" maxlength="140"></label>
+        <label>Resumo (aparece no Google e nas listas)<textarea id="f-desc" rows="2" maxlength="300"></textarea></label>
+        <div class="row3">
+          <label>Data<input id="f-date" type="date"></label>
+          <label>Categoria<input id="f-cat" list="cats"><datalist id="cats"></datalist></label>
+          <label>Etiquetas (separe por vírgula)<input id="f-tags" placeholder="3D&T, Mercs"></label>
+        </div>
+        <div class="row2">
+          <label>Endereço (URL) da postagem<input id="f-slug" placeholder="gerado a partir do título" spellcheck="false"></label>
+          <label>Autor<input id="f-author"></label>
+        </div>
+        <div class="cover-box">
+          <div>
+            <label>Imagem de capa (opcional)<input id="f-cover" type="file" accept="image/*"></label>
+            <label>Descrição da imagem (para leitores de tela)<input id="f-coveralt"></label>
+            <button type="button" class="ghost small" id="btn-cover-rm" hidden>Remover capa</button>
+          </div>
+          <img id="cover-prev" alt="" hidden>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-w" aria-selected="true">Escrever</button>
+        <button type="button" role="tab" id="tab-p" aria-selected="false">Prévia</button>
+        <span class="muted small" id="count"></span>
+      </div>
+
+      <div class="split">
+        <div id="pane-w" class="pane">
+          <div class="toolbar" role="toolbar" aria-label="Formatação">
+            <button type="button" data-act="h2">Título</button>
+            <button type="button" data-act="h3">Subtítulo</button>
+            <button type="button" data-act="bold"><b>N</b></button>
+            <button type="button" data-act="italic"><i>I</i></button>
+            <button type="button" data-act="link">Link</button>
+            <button type="button" data-act="ul">Lista</button>
+            <button type="button" data-act="quote">Citação</button>
+            <button type="button" data-act="img">Imagem</button>
+            <input type="file" id="f-img" accept="image/*" hidden>
+          </div>
+          <textarea id="f-body" spellcheck="true" placeholder="Escreva o texto aqui, em Markdown."></textarea>
+          <p class="muted small">Parágrafo novo: linha em branco. Quebra de linha dentro do parágrafo: termine a linha com dois espaços.</p>
+        </div>
+        <div id="pane-p" class="pane preview" aria-live="polite"></div>
+      </div>
+
+      <div class="card actions sticky">
+        <button type="button" class="primary" id="btn-publish">Publicar</button>
+        <button type="button" id="btn-draft">Salvar rascunho</button>
+        <span class="grow"></span>
+        <button type="button" class="danger" id="btn-delete" hidden>Excluir</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="editor.js"></script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # Como publicar e manter o portal
 
+**Atalho para artigos:** use o editor visual em `/editor/` (veja `docs/EDITOR.md`). Os passos abaixo são o caminho manual.
+
 Instruções simples. Você só precisa editar arquivos de texto; o site se atualiza sozinho.
 
 ## 1. Criar um artigo
