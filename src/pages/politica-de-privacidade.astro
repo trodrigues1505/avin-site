@@ -1,30 +1,45 @@
 ---
 import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
 ---
-<Base title="Política de Privacidade" description="Política de Privacidade do Aventuras Inacabadas.">
+<Base title="Política de Privacidade" description="Como o Aventuras Inacabadas trata dados: sem anúncios, sem rastreadores e sem cadastro.">
   <div class="wrap">
-    <div class="page-head"><h1>Política de Privacidade</h1></div>
+    <div class="page-head">
+      <h1>Política de Privacidade</h1>
+      <p>Atualizada em 4 de novembro de 2026.</p>
+    </div>
     <div class="prose" style="margin-inline:0">
-      <p>A sua privacidade é importante para nós. Esta Política de Privacidade explica como as informações são coletadas, usadas e protegidas no Aventuras Inacabadas.</p>
-      <h2>Coleta de informações</h2>
-      <p>Podemos coletar informações pessoais, como nome e email, quando você entra em contato conosco ou interage com o blog.</p>
-      <h2>Uso das informações</h2>
-      <p>As informações coletadas são utilizadas para:</p>
+      <p>Esta política explica quais informações o Aventuras Inacabadas coleta, como as usa e quais são os seus direitos. Resumindo: este site não pede cadastro, não exibe anúncios e não usa ferramentas de rastreamento.</p>
+
+      <h2>O que o site não faz</h2>
       <ul>
-        <li>Melhorar a experiência do usuário</li>
-        <li>Responder dúvidas e mensagens</li>
-        <li>Exibir conteúdo relevante</li>
+        <li>Não exige login, cadastro nem preenchimento de formulários.</li>
+        <li>Não tem comentários.</li>
+        <li>Não usa Google Analytics nem outro serviço de estatísticas de terceiros.</li>
+        <li>Não exibe anúncios, inclusive do Google AdSense.</li>
+        <li>Não define cookies próprios para rastrear a sua navegação.</li>
       </ul>
-      <h2>Cookies</h2>
-      <p>Este site utiliza cookies para melhorar a navegação do usuário.</p>
-      <p>O Google, como fornecedor de terceiros, utiliza cookies para exibir anúncios. Com o uso do cookie DART, o Google pode exibir anúncios com base nas visitas feitas a este e a outros sites na internet.</p>
-      <p>Os usuários podem desativar o cookie DART visitando a Política de Privacidade da rede de conteúdo e dos anúncios do Google.</p>
-      <h2>Publicidade</h2>
-      <p>Utilizamos o Google AdSense para exibir anúncios. Esses anúncios podem usar cookies e/ou web beacons para coletar dados durante a navegação.</p>
-      <h2>Consentimento</h2>
-      <p>Ao utilizar este site, você concorda com esta Política de Privacidade.</p>
+
+      <h2>Contato por e-mail</h2>
+      <p>Se você escrever para <a href="mailto:aventurasinacabadas@gmail.com">aventurasinacabadas@gmail.com</a>, recebemos o seu endereço de e-mail e o conteúdo da mensagem. Usamos essas informações apenas para responder, e não as vendemos nem as repassamos a terceiros.</p>
+
+      <h2>Hospedagem</h2>
+      <p>O site é hospedado no GitHub Pages. Como em qualquer hospedagem, o provedor pode registrar dados técnicos de acesso, como endereço IP e tipo de navegador, conforme a política de privacidade do próprio GitHub. Não temos acesso a esses registros nem os utilizamos.</p>
+
+      <h2>Ferramentas e aplicativos</h2>
+      <p>Alguns aplicativos de RPG publicados aqui guardam preferências ou históricos no armazenamento local do seu navegador. Essas informações ficam no seu aparelho e não são enviadas ao site. Você pode apagá-las limpando os dados do navegador.</p>
+
+      <h2>Links externos</h2>
+      <p>O site contém links para outros endereços, como o <a href={SITE.supportUrl} rel="noopener">Apoia-se</a>. Ao apoiar o projeto, os dados de pagamento e de cadastro são tratados pela plataforma escolhida, e não por este site. Cada serviço tem a sua própria política de privacidade.</p>
+
+      <h2>Blog antigo</h2>
+      <p>O endereço anterior do projeto, no Blogger, pode continuar a exibir anúncios e cookies de terceiros, conforme as políticas do Blogger e do Google. Elas não se aplicam a este site.</p>
+
+      <h2>Seus direitos</h2>
+      <p>Você pode pedir informações sobre os dados que recebemos de você ou solicitar a exclusão de mensagens enviadas, escrevendo para o e-mail de contato acima.</p>
+
       <h2>Alterações</h2>
-      <p>Esta Política de Privacidade pode ser atualizada a qualquer momento, sem aviso prévio.</p>
+      <p>Esta política pode ser atualizada. Se o site passar a usar anúncios, estatísticas ou outros recursos que tratem dados, ela será revisada antes disso, e a data no topo da página mostrará a última atualização.</p>
     </div>
   </div>
 </Base>

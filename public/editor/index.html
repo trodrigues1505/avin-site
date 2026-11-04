@@ -88,29 +88,66 @@
         </div>
       </div>
 
-      <div class="tabs" role="tablist">
-        <button type="button" role="tab" id="tab-w" aria-selected="true">Escrever</button>
-        <button type="button" role="tab" id="tab-p" aria-selected="false">Prévia</button>
-        <span class="muted small" id="count"></span>
+      <!-- Formato Markdown (postagens já existentes) -->
+      <div id="body-md" hidden>
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" id="tab-w" aria-selected="true">Escrever</button>
+          <button type="button" role="tab" id="tab-p" aria-selected="false">Prévia</button>
+          <span class="muted small" id="count"></span>
+        </div>
+        <div class="split" data-tab="w">
+          <div id="pane-w" class="pane">
+            <div class="toolbar" role="toolbar" aria-label="Formatação Markdown">
+              <button type="button" data-act="h2">Título</button>
+              <button type="button" data-act="h3">Subtítulo</button>
+              <button type="button" data-act="bold"><b>N</b></button>
+              <button type="button" data-act="italic"><i>I</i></button>
+              <button type="button" data-act="link">Link</button>
+              <button type="button" data-act="ul">Lista</button>
+              <button type="button" data-act="quote">Citação</button>
+              <button type="button" data-act="img">Imagem</button>
+              <input type="file" id="f-img" accept="image/*" hidden>
+              <button type="button" class="ghost" id="btn-convert">Converter para editor Visual/HTML</button>
+            </div>
+            <textarea id="f-body" spellcheck="true" placeholder="Escreva o texto aqui, em Markdown."></textarea>
+            <p class="muted small">Esta postagem está em Markdown. Parágrafo novo: linha em branco. Quebra de linha: termine a linha com dois espaços.</p>
+          </div>
+          <div id="pane-p" class="pane preview" aria-live="polite"></div>
+        </div>
       </div>
 
-      <div class="split">
-        <div id="pane-w" class="pane">
-          <div class="toolbar" role="toolbar" aria-label="Formatação">
-            <button type="button" data-act="h2">Título</button>
-            <button type="button" data-act="h3">Subtítulo</button>
-            <button type="button" data-act="bold"><b>N</b></button>
-            <button type="button" data-act="italic"><i>I</i></button>
-            <button type="button" data-act="link">Link</button>
-            <button type="button" data-act="ul">Lista</button>
-            <button type="button" data-act="quote">Citação</button>
-            <button type="button" data-act="img">Imagem</button>
-            <input type="file" id="f-img" accept="image/*" hidden>
-          </div>
-          <textarea id="f-body" spellcheck="true" placeholder="Escreva o texto aqui, em Markdown."></textarea>
-          <p class="muted small">Parágrafo novo: linha em branco. Quebra de linha dentro do parágrafo: termine a linha com dois espaços.</p>
+      <!-- Formato HTML (editor estilo Blogger: Visual e HTML) -->
+      <div id="body-html" hidden>
+        <div class="tabs" role="tablist" aria-label="Modo de edição">
+          <button type="button" role="tab" id="m-vis" aria-selected="true">Visual</button>
+          <button type="button" role="tab" id="m-html" aria-selected="false">HTML</button>
+          <span class="muted small" id="count2"></span>
         </div>
-        <div id="pane-p" class="pane preview" aria-live="polite"></div>
+        <div id="vis-wrap">
+          <div class="toolbar" id="vtoolbar" role="toolbar" aria-label="Formatação">
+            <button type="button" data-cmd="p">Parágrafo</button>
+            <button type="button" data-cmd="h2">Título</button>
+            <button type="button" data-cmd="h3">Subtítulo</button>
+            <button type="button" data-cmd="bold"><b>N</b></button>
+            <button type="button" data-cmd="italic"><i>I</i></button>
+            <button type="button" data-cmd="link">Link</button>
+            <button type="button" data-cmd="unlink">Tirar link</button>
+            <button type="button" data-cmd="ul">Lista</button>
+            <button type="button" data-cmd="ol">Numerada</button>
+            <button type="button" data-cmd="quote">Citação</button>
+            <button type="button" data-cmd="img">Imagem</button>
+            <button type="button" data-cmd="clear">Limpar formato</button>
+            <button type="button" data-cmd="undo">Desfazer</button>
+            <button type="button" data-cmd="redo">Refazer</button>
+            <input type="file" id="f-vimg" accept="image/*" hidden>
+          </div>
+          <div id="visual" class="editable" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Texto da postagem"></div>
+        </div>
+        <div id="html-wrap" hidden>
+          <textarea id="f-html" spellcheck="false" placeholder="&lt;p&gt;Escreva o HTML aqui.&lt;/p&gt;"></textarea>
+          <p class="muted small">HTML puro, como no Blogger. Por segurança, <code>&lt;script&gt;</code>, formulários e atributos <code>on…=</code> são removidos ao salvar.
+            Imagens enviadas pelo botão ficam em <code>../../posts-img/</code>.</p>
+        </div>
       </div>
 
       <div class="card actions sticky">

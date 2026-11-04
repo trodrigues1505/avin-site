@@ -21,23 +21,33 @@ Use apenas em aparelhos seus. Se perder o aparelho, revogue o token no GitHub (m
 
 ## Uso
 
-- **Nova postagem**: preencha título, resumo, categoria e etiquetas; escreva o texto; **Publicar**.
+- **Nova postagem**: preencha título, resumo, categoria e etiquetas, escreva o texto e clique em **Publicar**.
   O endereço (URL) é gerado do título e pode ser editado antes do primeiro envio. Depois fica fixo.
+- **Visual e HTML (como no Blogger)**: o texto de postagens novas tem duas abas.
+  **Visual** edita como num processador de texto (títulos, negrito, itálico, links, listas, citação, imagem).
+  **HTML** mostra e deixa editar o código. Alterne entre as duas quando quiser.
+- **Segurança do HTML**: ao salvar, `<script>`, `<style>`, formulários e atributos `on…=` (como `onclick`) são
+  removidos. Links `javascript:` também. Tags como `<iframe>` (vídeos) são mantidas.
 - **Editar**: escolha na lista, altere e publique de novo. A data de revisão (`updated`) é registrada.
+- **Postagens antigas** (as duas migradas do Blogger) estão em Markdown e abrem no editor de Markdown.
+  O botão **Converter para editor Visual/HTML** as transforma em HTML. Confira o texto antes de publicar;
+  depois de publicada em HTML, a postagem não volta para Markdown.
 - **Salvar rascunho**: grava no GitHub com `draft: true`; não aparece no site.
-- **Imagens**: capa e imagens no texto são reduzidas a no máximo 1600 px e enviadas para `src/assets/posts/`.
+- **Imagens**: capa e imagens no texto são reduzidas a no máximo 1600 px e enviadas ao repositório
+  (`src/assets/posts/` para a capa; `public/posts-img/` para imagens dentro de textos em HTML).
   Sempre preencha a descrição da imagem.
 - **Excluir**: pede um segundo clique. O arquivo continua no histórico do GitHub, onde pode ser restaurado.
-- **Prévia**: aproximada. A aparência final é a do site depois do deploy.
 
-## Texto
+## Sobre o "login com e-mail"
 
-Escreva em Markdown. Parágrafo novo: linha em branco. Quebra de linha dentro do parágrafo: termine a linha com
-dois espaços. Os botões da barra inserem título, subtítulo, negrito, itálico, link, lista, citação e imagem.
+O Blogger tem um servidor próprio que guarda a sua conta. Este site é estático (sem servidor), então não existe
+conta de e-mail e senha. No lugar, o acesso é pelo token do GitHub, que equivale a ser o administrador:
+você o cola uma vez em cada aparelho e depois só abre `/editor/`. Quem não tem o token não consegue publicar,
+mesmo conhecendo o endereço.
 
 ## Limites conhecidos
 
-- Edita apenas artigos (`src/content/articles/*.md`). Aventuras, ferramentas e biblioteca seguem o `COMO_PUBLICAR.md`.
+- Edita apenas artigos (`src/content/articles/*.md`). O HTML é guardado dentro do arquivo `.md` do artigo. Aventuras, ferramentas e biblioteca seguem o `COMO_PUBLICAR.md`.
 - Não trata conflito de edição simultânea: se o arquivo mudar no GitHub enquanto você edita, o envio falha e
   você reabre a postagem.
 - O texto não fica salvo em nuvem enquanto você escreve; há um rascunho local automático neste navegador.

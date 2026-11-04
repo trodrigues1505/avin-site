@@ -16,7 +16,8 @@
   let cfg = loadCfg();
 
   // ---------- estado ----------
-  const S = { posts: [], cur: null, pending: new Map(), cover: null, busy: false };
+  const S = { posts: [], cur: null, pending: new Map(), cover: null, busy: false, fmt: 'md', mode: 'vis' };
+  let RAW = false; // converte Markdown sem reescrever endereços de imagem
 
   // ---------- utilidades ----------
   let toastTimer;
@@ -69,7 +70,7 @@
     }
     return { data, body: m[2].replace(/^\n+/, '') };
   }
-  const KNOWN = ['title', 'description', 'date', 'updated', 'author', 'category', 'tags', 'cover', 'coverAlt', 'draft', 'originalUrl'];
+  const KNOWN = ['title', 'description', 'date', 'updated', 'author', 'category', 'tags', 'cover', 'coverAlt', 'draft', 'originalUrl', 'format'];
   function buildFM(d, extra) {
     const out = ['---'];
     const put = (k, v) => out.push(`${k}: ${typeof v === 'string' ? JSON.stringify(v) : Array.isArray(v) ? JSON.stringify(v) : v}`);
@@ -78,6 +79,7 @@
     put('author', d.author); put('category', d.category); put('tags', d.tags);
     if (d.cover) { put('cover', d.cover); put('coverAlt', d.coverAlt || ''); }
     if (d.draft) put('draft', true);
+    if (d.format === 'html') put('format', 'html');
     if (d.originalUrl) put('originalUrl', d.originalUrl);
     for (const k of Object.keys(extra || {})) if (!KNOWN.includes(k)) put(k, extra[k]);
     out.push('---');
@@ -86,6 +88,7 @@
 
   // ---------- prévia (Markdown simples) ----------
   function imgSrc(u) {
+    if (RAW) return u;
     const name = u.split('/').pop();
     if (u.startsWith(IMG_REL)) {
       const p = S.pending.get(name); if (p) return p.url;
@@ -119,11 +122,70 @@
     return html;
   }
   function renderPreview() {
+    if (S.fmt !== 'md') { countWords(); return; }
     const d = readForm();
     const cov = S.cover && (S.cover.url || (S.cover.path ? imgSrc(S.cover.path) : ''));
     $('#pane-p').innerHTML = `<h1>${esc(d.title || 'Sem título')}</h1><div class="meta">${esc(d.author)} · ${esc(d.date)} · ${esc(d.category || 'sem categoria')}</div>` + (cov ? `<p><img src="${esc(cov)}" alt="${esc(d.coverAlt || '')}"></p>` : '') + md($('#f-body').value);
     const words = ($('#f-body').value.trim().match(/\S+/g) || []).length;
     $('#count').textContent = `${words} palavras · ${Math.max(1, Math.round(words / 200))} min de leitura`;
+  }
+
+
+  // ---------- HTML: sanitização, estrutura, modo Visual ----------
+  const INLINE = new Set(['A', 'B', 'I', 'EM', 'STRONG', 'SPAN', 'IMG', 'BR', 'CODE', 'U', 'SMALL', 'SUP', 'SUB', 'MARK', 'S']);
+  function sanitize(html) {
+    const doc = new DOMParser().parseFromString(String(html), 'text/html');
+    doc.querySelectorAll('script,style,link,meta,base,object,embed,form,noscript,template,title').forEach((n) => n.remove());
+    doc.querySelectorAll('*').forEach((el) => {
+      [...el.attributes].forEach((a) => {
+        const n = a.name.toLowerCase(), v = a.value.replace(/[\s\u0000-\u001f]/g, '').toLowerCase();
+        if (n.startsWith('on') || n === 'srcdoc' || n === 'formaction' || n === 'action' || (['href', 'src', 'xlink:href'].includes(n) && /^(javascript:|vbscript:|data:text)/.test(v))) el.removeAttribute(a.name);
+      });
+    });
+    return doc.body;
+  }
+  // Cada bloco de nível superior numa linha, separados por linha em branco (seguro dentro de um arquivo .md)
+  function structure(body) {
+    const out = []; let buf = '';
+    const flush = () => { if (buf.trim()) out.push('<p>' + buf.trim() + '</p>'); buf = ''; };
+    body.childNodes.forEach((n) => {
+      if (n.nodeType === 3) { buf += esc(n.textContent).replace(/&quot;/g, '"'); }
+      else if (n.nodeType === 1 && INLINE.has(n.tagName)) { buf += n.outerHTML; }
+      else if (n.nodeType === 1) { flush(); out.push(n.outerHTML); }
+    });
+    flush();
+    return out.map((h) => h.replace(/\n[ \t]*\n/g, '\n').replace(/\n[ \t]+/g, '\n')).join('\n\n');
+  }
+  const normalizeHtml = (html) => structure(sanitize(html));
+  const stripAttrs = (root) => { root.querySelectorAll('[style],[class],[id]').forEach((e) => { e.removeAttribute('style'); e.removeAttribute('class'); e.removeAttribute('id'); }); root.querySelectorAll('span').forEach((sp) => { if (!sp.attributes.length) sp.replaceWith(...sp.childNodes); }); };
+  function toVisual(html) {
+    const b = sanitize(html);
+    b.querySelectorAll('img').forEach((i) => {
+      const m = (i.getAttribute('src') || '').match(/^\.\.\/\.\.\/posts-img\/([\w.-]+)$/);
+      if (m) { i.dataset.file = m[1]; const p = S.pending.get(m[1]); i.src = p ? p.url : `https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/public/posts-img/${m[1]}`; }
+    });
+    return b.innerHTML;
+  }
+  function htmlFromVisual() {
+    const b = sanitize($('#visual').innerHTML); stripAttrs(b);
+    b.querySelectorAll('img[data-file]').forEach((i) => { i.setAttribute('src', '../../posts-img/' + i.dataset.file); i.removeAttribute('data-file'); i.setAttribute('loading', 'lazy'); });
+    return structure(b);
+  }
+  function setMode(m) {
+    if (m === S.mode) return;
+    if (m === 'html') $('#f-html').value = htmlFromVisual(); else $('#visual').innerHTML = toVisual($('#f-html').value);
+    S.mode = m; applyMode();
+  }
+  function applyMode() {
+    $('#vis-wrap').hidden = S.mode !== 'vis'; $('#html-wrap').hidden = S.mode !== 'html';
+    $('#m-vis').setAttribute('aria-selected', String(S.mode === 'vis')); $('#m-html').setAttribute('aria-selected', String(S.mode === 'html'));
+  }
+  function loadHtml(html) { S.mode = 'vis'; $('#visual').innerHTML = toVisual(html); $('#f-html').value = html; applyMode(); }
+  function getBody() { return S.fmt === 'html' ? (S.mode === 'vis' ? htmlFromVisual() : normalizeHtml($('#f-html').value)) : $('#f-body').value; }
+  function applyFmt() { $('#body-md').hidden = S.fmt !== 'md'; $('#body-html').hidden = S.fmt !== 'html'; }
+  function countWords() {
+    const txt = S.fmt === 'html' ? (S.mode === 'vis' ? $('#visual').textContent : $('#f-html').value.replace(/<[^>]+>/g, ' ')) : $('#f-body').value;
+    const w = (txt.trim().match(/\S+/g) || []).length; $('#count2').textContent = `${w} palavras · ${Math.max(1, Math.round(w / 200))} min de leitura`;
   }
 
   // ---------- formulário ----------
@@ -147,7 +209,8 @@
     $('#f-cat').value = d.category || ''; $('#f-author').value = d.author || 'Thiago Rodrigues';
     $('#f-tags').value = Array.isArray(d.tags) ? d.tags.join(', ') : '';
     $('#f-coveralt').value = d.coverAlt || ''; $('#f-slug').value = post.slug || '';
-    $('#f-slug').readOnly = !post.isNew; $('#f-body').value = post.body || '';
+    $('#f-slug').readOnly = !post.isNew; S.fmt = post.fmt || 'md'; applyFmt();
+    if (S.fmt === 'html') { $('#f-body').value = ''; loadHtml(post.body || ''); } else $('#f-body').value = post.body || '';
     $('#f-slug').dataset.manual = post.isNew ? '' : '1';
     setCover(d.cover ? { path: d.cover } : null);
     $('#btn-delete').hidden = post.isNew; $('#btn-delete').classList.remove('armed'); $('#btn-delete').textContent = 'Excluir';
@@ -197,12 +260,12 @@
     const f = await gh('contents/' + encodeURI(p.path) + ref());
     const { data, body } = parseFM(textFromB64(f.content));
     S.cur = { isNew: false, path: p.path, sha: f.sha, extra: data };
-    S.pending.clear(); fillForm({ data, body, slug: p.slug, isNew: false }); show('edit');
+    S.pending.clear(); fillForm({ data, body, slug: p.slug, isNew: false, fmt: data.format === 'html' ? 'html' : 'md' }); show('edit');
   }
   function newPost() {
     S.cur = { isNew: true, path: null, sha: null, extra: {} }; S.pending.clear();
-    let post = { data: { date: today(), author: 'Thiago Rodrigues' }, body: '', slug: '', isNew: true };
-    try { const d = JSON.parse(localStorage.getItem(LS_DRAFT)); if (d && (d.title || d.body) && confirm('Há um texto não publicado salvo neste navegador. Recuperar?')) post = { data: { title: d.title, description: d.description, date: d.date || today(), category: d.category, author: d.author, tags: d.tags, coverAlt: d.coverAlt }, body: d.body, slug: d.slug, isNew: true }; } catch { /* ignora */ }
+    let post = { data: { date: today(), author: 'Thiago Rodrigues' }, body: '', slug: '', isNew: true, fmt: 'html' };
+    try { const d = JSON.parse(localStorage.getItem(LS_DRAFT)); if (d && (d.title || d.body) && confirm('Há um texto não publicado salvo neste navegador. Recuperar?')) post = { data: { title: d.title, description: d.description, date: d.date || today(), category: d.category, author: d.author, tags: d.tags, coverAlt: d.coverAlt }, body: d.body, slug: d.slug, isNew: true, fmt: d.fmt || 'html' }; } catch { /* ignora */ }
     fillForm(post); show('edit');
   }
 
@@ -210,7 +273,7 @@
   function setBusy(b) { S.busy = b; ['#btn-publish', '#btn-draft', '#btn-delete'].forEach((s) => { $(s).disabled = b; }); }
   async function save(asDraft) {
     if (S.busy) return;
-    const d = readForm(); const body = $('#f-body').value;
+    const d = readForm(); const body = getBody();
     if (S.cur.isNew && !$('#f-slug').dataset.manual) d.slug = slugify(d.title);
     const err = !d.title ? 'Escreva um título.' : !d.description ? 'Escreva o resumo.' : !d.category ? 'Informe a categoria.' : !/^\d{4}-\d{2}-\d{2}$/.test(d.date) ? 'Informe a data.' : !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(d.slug) ? 'O endereço deve ter só letras minúsculas, números e hífens.' : S.cover && !d.coverAlt ? 'Descreva a imagem de capa (para acessibilidade).' : '';
     if (err) { toast(esc(err), true); return; }
@@ -221,10 +284,11 @@
       // imagens usadas
       const used = new Set(); const rx = /\.\.\/\.\.\/assets\/posts\/([\w.-]+)/g; let m;
       while ((m = rx.exec(body))) used.add(m[1]);
+      if (S.fmt === 'html') { const rx2 = /\.\.\/\.\.\/posts-img\/([\w.-]+)/g; let m2; while ((m2 = rx2.exec(body))) { const p2 = S.pending.get(m2[1]); if (p2) { await putFile(`public/posts-img/${m2[1]}`, await b64FromBlob(p2.blob), 'Imagem: ' + d.title); S.pending.delete(m2[1]); } } }
       let coverPath = S.cover ? S.cover.path : '';
       if (S.cover && S.cover.name) { used.add(S.cover.name); coverPath = IMG_REL + S.cover.name; }
       for (const name of used) { const p = S.pending.get(name); if (!p) continue; await putFile(`${IMG_DIR}/${name}`, await b64FromBlob(p.blob), 'Imagem: ' + d.title); S.pending.delete(name); }
-      const fm = Object.assign({}, d, { cover: coverPath || '', draft: asDraft, originalUrl: S.cur.extra.originalUrl, updated: S.cur.isNew ? '' : today() });
+      const fm = Object.assign({}, d, { format: S.fmt, cover: coverPath || '', draft: asDraft, originalUrl: S.cur.extra.originalUrl, updated: S.cur.isNew ? '' : today() });
       const text = buildFM(fm, S.cur.extra) + '\n\n' + body.replace(/\s+$/, '') + '\n';
       const res = await putFile(path, b64FromText(text), (asDraft ? 'Rascunho: ' : S.cur.isNew ? 'Publicar: ' : 'Atualizar: ') + d.title, S.cur.sha);
       S.cur = { isNew: false, path, sha: res.content.sha, extra: Object.assign({}, S.cur.extra, { originalUrl: S.cur.extra.originalUrl }) };
@@ -246,7 +310,7 @@
   // ---------- toolbar ----------
   function wrap(a, b = a, ph = '') { const t = $('#f-body'); const s = t.selectionStart, e = t.selectionEnd; const sel = t.value.slice(s, e) || ph; t.setRangeText(a + sel + b, s, e, 'end'); t.focus(); onInput(); }
   function linePrefix(p) { const t = $('#f-body'); let s = t.selectionStart; const st = t.value.lastIndexOf('\n', s - 1) + 1; t.setRangeText(p, st, st, 'end'); t.focus(); onInput(); }
-  function onInput() { renderPreview(); try { const d = readForm(); localStorage.setItem(LS_DRAFT, JSON.stringify(Object.assign({}, d, { body: $('#f-body').value }))); } catch { /* ignora */ } }
+  function onInput() { renderPreview(); try { const d = readForm(); localStorage.setItem(LS_DRAFT, JSON.stringify(Object.assign({}, d, { body: getBody(), fmt: S.fmt }))); } catch { /* ignora */ } }
 
   // ---------- eventos ----------
   $('#conn-form').addEventListener('submit', async (e) => {
@@ -276,6 +340,49 @@
     ({ h2: () => linePrefix('## '), h3: () => linePrefix('### '), bold: () => wrap('**', '**', 'texto'), italic: () => wrap('*', '*', 'texto'), ul: () => linePrefix('- '), quote: () => linePrefix('> '),
       link: () => { const u = prompt('Endereço do link (https://…):', 'https://'); if (u) wrap('[', `](${u})`, 'texto do link'); }, img: () => $('#f-img').click() })[a]();
   });
+
+  // ----- editor Visual/HTML -----
+  let savedRange = null;
+  const vis = $('#visual');
+  const saveSel = () => { const s = getSelection(); if (s.rangeCount && vis.contains(s.anchorNode)) savedRange = s.getRangeAt(0).cloneRange(); };
+  const restoreSel = () => { vis.focus(); if (savedRange) { const s = getSelection(); s.removeAllRanges(); s.addRange(savedRange); } };
+  try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch { /* ignora */ }
+  vis.addEventListener('keyup', saveSel); vis.addEventListener('mouseup', saveSel); vis.addEventListener('blur', saveSel);
+  vis.addEventListener('input', onInput);
+  vis.addEventListener('paste', (e) => {
+    e.preventDefault(); const h = e.clipboardData.getData('text/html'), t = e.clipboardData.getData('text/plain');
+    if (h) { const b = sanitize(h); stripAttrs(b); document.execCommand('insertHTML', false, b.innerHTML); } else document.execCommand('insertText', false, t);
+    onInput();
+  });
+  $('#f-html').addEventListener('input', onInput);
+  $('#m-vis').addEventListener('click', () => { setMode('vis'); countWords(); });
+  $('#m-html').addEventListener('click', () => { setMode('html'); countWords(); });
+  $('#vtoolbar').addEventListener('mousedown', (e) => { if (e.target.closest('button')) e.preventDefault(); });
+  $('#vtoolbar').addEventListener('click', (e) => {
+    const c = e.target.closest('button')?.dataset.cmd; if (!c) return; restoreSel();
+    const x = (k, v) => document.execCommand(k, false, v);
+    ({ p: () => x('formatBlock', 'p'), h2: () => x('formatBlock', 'h2'), h3: () => x('formatBlock', 'h3'), bold: () => x('bold'), italic: () => x('italic'),
+      ul: () => x('insertUnorderedList'), ol: () => x('insertOrderedList'), quote: () => x('formatBlock', 'blockquote'), unlink: () => x('unlink'),
+      clear: () => { x('removeFormat'); x('formatBlock', 'p'); }, undo: () => x('undo'), redo: () => x('redo'),
+      link: () => { const u = prompt('Endereço do link (https://…):', 'https://'); if (u) x('createLink', u); },
+      img: () => { saveSel(); $('#f-vimg').click(); } })[c]();
+    saveSel(); onInput();
+  });
+  $('#f-vimg').addEventListener('change', async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const { name, url } = await addImage(f); const alt = prompt('Descreva a imagem (para leitores de tela):', '') || '';
+      restoreSel(); document.execCommand('insertHTML', false, `<p><img src="${url}" data-file="${name}" alt="${esc(alt)}"></p>`); onInput();
+    } catch (er) { toast(esc(er.message), true); } e.target.value = '';
+  });
+  $('#btn-convert').addEventListener('click', () => {
+    const t = $('#f-body').value;
+    if (/!\[[^\]]*\]\(/.test(t)) { toast('Esta postagem tem imagens no texto e não pode ser convertida automaticamente.', true); return; }
+    if (!confirm('Converter esta postagem para o editor Visual/HTML? O texto será transformado em HTML. Confira o resultado antes de publicar. Depois de publicada em HTML, a postagem não volta para Markdown.')) return;
+    RAW = true; const html = md(t); RAW = false;
+    S.fmt = 'html'; applyFmt(); loadHtml(normalizeHtml(html)); countWords(); toast('Convertida. Confira o texto e publique para salvar.', false, 5000);
+  });
+
   const setTab = (t) => { $('.split').dataset.tab = t; $('#tab-w').setAttribute('aria-selected', String(t === 'w')); $('#tab-p').setAttribute('aria-selected', String(t === 'p')); if (t === 'p') renderPreview(); };
   $('#tab-w').addEventListener('click', () => setTab('w')); $('#tab-p').addEventListener('click', () => setTab('p'));
   window.addEventListener('beforeunload', (e) => { if (S.busy) { e.preventDefault(); e.returnValue = ''; } });
