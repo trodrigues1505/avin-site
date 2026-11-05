@@ -70,10 +70,11 @@
         <label>Título<input id="f-title" maxlength="140"></label>
         <label>Resumo (aparece no Google e nas listas)<textarea id="f-desc" rows="2" maxlength="300"></textarea></label>
         <div class="row3">
-          <label>Data<input id="f-date" type="date"></label>
+          <div class="dt"><label>Data<input id="f-date" type="date"></label><label>Hora (opcional)<input id="f-time" type="time"></label></div>
           <label>Categoria<input id="f-cat" list="cats"><datalist id="cats"></datalist></label>
           <label>Etiquetas (separe por vírgula)<input id="f-tags" placeholder="3D&T, Mercs"></label>
         </div>
+        <p id="sched-hint" class="notice" hidden></p>
         <div class="row2">
           <label>Endereço (URL) da postagem<input id="f-slug" placeholder="gerado a partir do título" spellcheck="false"></label>
           <label>Autor<input id="f-author"></label>
@@ -136,7 +137,7 @@
             <button type="button" data-cmd="ol">Numerada</button>
             <button type="button" data-cmd="quote">Citação</button>
             <button type="button" data-cmd="img">Imagem</button>
-            <button type="button" data-cmd="clear">Limpar formato</button>
+            <button type="button" data-cmd="clear">Limpar</button>
             <button type="button" data-cmd="undo">Desfazer</button>
             <button type="button" data-cmd="redo">Refazer</button>
             <input type="file" id="f-vimg" accept="image/*" hidden>

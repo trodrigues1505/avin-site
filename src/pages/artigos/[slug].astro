@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SupportBlock from '../../components/SupportBlock.astro';
+import Comments from '../../components/Comments.astro';
+import { SITE } from '../../config/site';
 import ArticleRow from '../../components/ArticleRow.astro';
 import { getArticles } from '../../lib/content';
 import { url, fmtDate, readingTime, slugify } from '../../lib/url';
@@ -29,6 +31,7 @@ const related = all
           <time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time>
           <span>{readingTime(entry.body ?? '')} min de leitura</span>
           <span>{d.category}</span>
+          {SITE.goatcounter && <span id="gc-views" hidden></span>}
         </div>
         {d.tags.length > 0 && <ul class="tags">{d.tags.map((t: string) => <li><a class="tag" href={url(`etiquetas/${slugify(t)}/`)}>{t}</a></li>)}</ul>}
       </div>
@@ -41,6 +44,7 @@ const related = all
     <div class="wrap">
       <div class="prose"><Content /></div>
       <div class="article-foot">
+        <Comments slug={entry.id} title={d.title} />
         <SupportBlock compact />
         {d.originalUrl && <p class="small muted" style="margin-top:24px">Publicado originalmente em <a href={d.originalUrl} rel="noopener">aventurasinacabadas.blogspot.com</a>.</p>}
       </div>

@@ -4,6 +4,7 @@ import { SITE } from '../config/site';
 import { url } from '../lib/url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Stats from '../components/Stats.astro';
 
 interface Props { title?: string; description?: string; image?: string; type?: 'website' | 'article'; published?: Date; noindex?: boolean; }
 const { title, description = SITE.description, image, type = 'website', published, noindex = false } = Astro.props;
@@ -33,11 +34,13 @@ const ogImage = new URL(image ?? url('og-default.png'), Astro.site).href;
     {published && <meta property="article:published_time" content={published.toISOString()} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#ffffff" />
+    {SITE.goatcounter && <script is:inline async data-goatcounter={`https://${SITE.goatcounter}.goatcounter.com/count`} src="https://gc.zgo.at/count.js"></script>}
   </head>
   <body>
     <a class="skip" href="#conteudo">Pular para o conteúdo</a>
     <Header />
     <main id="conteudo" tabindex="-1"><slot /></main>
     <Footer />
+    {SITE.goatcounter && <Stats code={SITE.goatcounter} />}
   </body>
 </html>

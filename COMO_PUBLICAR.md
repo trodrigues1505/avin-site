@@ -87,6 +87,10 @@ O novo deploy acontece sozinho.
 
 A capa da home é `src/assets/capa.png` (troque o arquivo mantendo o nome). A imagem de compartilhamento `public/og-default.png` é gerada dela com `node scripts/make-og.mjs`. O emblema do cabeçalho é `src/assets/emblema.png`, o logo do rodapé é `src/assets/logo-completo.png` e o ícone da aba é `public/favicon.png`.
 
+## 10. Visitas e comentários
+
+Veja `docs/VISITAS_E_COMENTARIOS.md`: dois códigos em `src/config/site.ts` ligam o contador e a caixa de comentários.
+
 ## CMS visual?
 
 Não vale a pena agora: com poucos artigos, editar Markdown é mais simples e não adiciona serviço nem login.

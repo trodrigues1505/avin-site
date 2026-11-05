@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import { SITE } from '../config/site';
+const gc = !!SITE.goatcounter;
+const cm = !!SITE.cusdisAppId;
 ---
 <Base title="Política de Privacidade" description="Como o Aventuras Inacabadas trata dados: sem anúncios, sem rastreadores e sem cadastro.">
   <div class="wrap">
@@ -9,13 +11,13 @@ import { SITE } from '../config/site';
       <p>Atualizada em 4 de novembro de 2026.</p>
     </div>
     <div class="prose" style="margin-inline:0">
-      <p>Esta política explica quais informações o Aventuras Inacabadas coleta, como as usa e quais são os seus direitos. Resumindo: este site não pede cadastro, não exibe anúncios e não usa ferramentas de rastreamento.</p>
+      <p>Esta política explica quais informações o Aventuras Inacabadas coleta, como as usa e quais são os seus direitos. Resumindo: este site não pede cadastro, não exibe anúncios e não usa cookies de rastreamento nem monta perfis dos visitantes.</p>
 
       <h2>O que o site não faz</h2>
       <ul>
         <li>Não exige login, cadastro nem preenchimento de formulários.</li>
-        <li>Não tem comentários.</li>
-        <li>Não usa Google Analytics nem outro serviço de estatísticas de terceiros.</li>
+        {!cm && <li>Não tem comentários.</li>}
+        <li>Não usa Google Analytics{!gc && ' nem outro serviço de estatísticas de terceiros'}.</li>
         <li>Não exibe anúncios, inclusive do Google AdSense.</li>
         <li>Não define cookies próprios para rastrear a sua navegação.</li>
       </ul>
@@ -25,6 +27,16 @@ import { SITE } from '../config/site';
 
       <h2>Hospedagem</h2>
       <p>O site é hospedado no GitHub Pages. Como em qualquer hospedagem, o provedor pode registrar dados técnicos de acesso, como endereço IP e tipo de navegador, conforme a política de privacidade do próprio GitHub. Não temos acesso a esses registros nem os utilizamos.</p>
+
+      {gc && (<>
+        <h2>Contagem de visitas</h2>
+        <p>Para saber quantas pessoas leem o site, usamos o GoatCounter, um serviço de estatísticas que não usa cookies e não guarda dados que identifiquem você. Ele registra apenas informações gerais de cada visualização, como a página acessada, o site de origem, o navegador, o tamanho da tela e a localização aproximada. As contagens de visualizações aparecem publicamente nas páginas.</p>
+      </>)}
+
+      {cm && (<>
+        <h2>Comentários</h2>
+        <p>Os comentários das postagens são processados pelo Cusdis, que não usa cookies de rastreamento nem exige conta. Ao comentar, você envia ao Cusdis as informações que digitar no formulário, como nome ou apelido, e-mail (se o formulário pedir) e o texto. Os comentários passam por aprovação antes de aparecerem, e o texto aprovado fica público junto com o nome ou apelido informado. Para pedir a remoção de um comentário seu, escreva para o e-mail de contato. A caixa de comentários só é carregada quando você chega ao fim da postagem.</p>
+      </>)}
 
       <h2>Ferramentas e aplicativos</h2>
       <p>Alguns aplicativos de RPG publicados aqui guardam preferências ou históricos no armazenamento local do seu navegador. Essas informações ficam no seu aparelho e não são enviadas ao site. Você pode apagá-las limpando os dados do navegador.</p>

@@ -167,3 +167,8 @@ a.tag:hover { background: var(--bronze); color: #fff; }
 @media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr; } }
 
 .notice { border-left: 3px solid var(--bronze); background: var(--bronze-tint); padding: var(--s3) var(--s4); border-radius: 0 var(--r-sm) var(--r-sm) 0; font-size: .95rem; }
+
+/* Comentários */
+.comments { margin: var(--s7) 0 var(--s6); padding-top: var(--s5); border-top: 1px solid var(--line); }
+.comments h2 { font-size: 1.5rem; }
+#cusdis_thread { margin-top: var(--s4); min-height: 80px; }

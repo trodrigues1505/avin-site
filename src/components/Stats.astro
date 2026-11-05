@@ -1,0 +1,19 @@
+---
+// Mostra as visualizações (contador público do GoatCounter). Se a contagem falhar, nada aparece.
+const { code } = Astro.props;
+---
+<script is:inline define:vars={{ code }}>
+  (function () {
+    var base = 'https://' + code + '.goatcounter.com/counter/';
+    function fmt(n, one, many) { return n + ' ' + (String(n) === '1' ? one : many); }
+    function load(path, el, one, many) {
+      if (!el) return;
+      fetch(base + encodeURIComponent(path) + '.json')
+        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+        .then(function (d) { el.textContent = fmt(d.count, one, many); el.hidden = false; })
+        .catch(function () {});
+    }
+    load('TOTAL', document.getElementById('gc-total'), 'visualização no site', 'visualizações no site');
+    load(location.pathname, document.getElementById('gc-views'), 'visualização', 'visualizações');
+  })();
+</script>

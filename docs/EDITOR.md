@@ -32,6 +32,11 @@ Use apenas em aparelhos seus. Se perder o aparelho, revogue o token no GitHub (m
 - **Postagens antigas** (as duas migradas do Blogger) estão em Markdown e abrem no editor de Markdown.
   O botão **Converter para editor Visual/HTML** as transforma em HTML. Confira o texto antes de publicar;
   depois de publicada em HTML, a postagem não volta para Markdown.
+- **Agendar**: coloque uma data (e, se quiser, uma hora) no futuro e o botão passa a se chamar **Agendar**.
+  O horário é o de Brasília. A postagem fica guardada, não aparece no site nem tem endereço público até a hora
+  chegar, e entra sozinha no ar: o site é reconstruído de hora em hora, então pode levar até 1 hora depois do
+  horário marcado. Na lista, ela aparece com o selo "agendada". Sem hora, vale a meia-noite do dia escolhido.
+- **Barra de formatação fixa**: os botões acompanham o texto enquanto você rola, mesmo em postagens longas.
 - **Salvar rascunho**: grava no GitHub com `draft: true`; não aparece no site.
 - **Imagens**: capa e imagens no texto são reduzidas a no máximo 1600 px e enviadas ao repositório
   (`src/assets/posts/` para a capa; `public/posts-img/` para imagens dentro de textos em HTML).
@@ -44,6 +49,13 @@ O Blogger tem um servidor próprio que guarda a sua conta. Este site é estátic
 conta de e-mail e senha. No lugar, o acesso é pelo token do GitHub, que equivale a ser o administrador:
 você o cola uma vez em cada aparelho e depois só abre `/editor/`. Quem não tem o token não consegue publicar,
 mesmo conhecendo o endereço.
+
+## Agendamento: requisito no GitHub
+
+O arquivo `.github/workflows/deploy.yml` precisa ter o bloco `schedule` (já incluso neste pacote). Sem ele,
+a postagem agendada só aparece no próximo deploy manual. O GitHub pode atrasar execuções agendadas e costuma
+desativá-las em repositórios públicos sem nenhuma atividade por cerca de 60 dias (confira a regra atual na
+documentação do GitHub); publicar qualquer coisa ou reativar em **Actions** resolve.
 
 ## Limites conhecidos
 

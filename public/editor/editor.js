@@ -28,6 +28,11 @@
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   function slugify(s) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
   const today = () => new Date().toISOString().slice(0, 10);
+  // Horário de Brasília (UTC-3). "2026-11-10" = 00:00; com hora vira "2026-11-10T09:00:00-03:00".
+  const toDateObj = (s) => { s = String(s || ''); return new Date(s.includes('T') ? s : s + 'T00:00:00-03:00'); };
+  const fullDate = (d) => (d.time ? `${d.date}T${d.time}:00-03:00` : d.date);
+  const isFuture = (s) => { const t = toDateObj(s).getTime(); return !isNaN(t) && t > Date.now(); };
+  const fmtBR = (s) => toDateObj(s).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ' às');
   function show(view) { document.querySelectorAll('[data-view]').forEach((e) => { e.hidden = e.dataset.view !== view; }); window.scrollTo(0, 0); }
   function b64FromText(t) { const b = new TextEncoder().encode(t); let s = ''; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s); }
   function textFromB64(b) { const s = atob(b.replace(/\n/g, '')); const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new TextDecoder().decode(u); }
@@ -75,7 +80,7 @@
   function buildFM(d, extra) {
     const out = ['---'];
     const put = (k, v) => out.push(`${k}: ${typeof v === 'string' ? JSON.stringify(v) : Array.isArray(v) ? JSON.stringify(v) : v}`);
-    put('title', d.title); put('description', d.description); out.push('date: ' + d.date);
+    put('title', d.title); put('description', d.description); out.push('date: ' + (String(d.date).includes('T') ? JSON.stringify(d.date) : d.date));
     if (d.updated) out.push('updated: ' + d.updated);
     put('author', d.author); put('category', d.category); put('tags', d.tags);
     if (d.cover) { put('cover', d.cover); put('coverAlt', d.coverAlt || ''); }
@@ -192,7 +197,7 @@
   // ---------- formulário ----------
   function readForm() {
     return {
-      title: $('#f-title').value.trim(), description: $('#f-desc').value.trim(), date: $('#f-date').value,
+      title: $('#f-title').value.trim(), description: $('#f-desc').value.trim(), date: $('#f-date').value, time: $('#f-time').value,
       category: $('#f-cat').value.trim(), author: $('#f-author').value.trim() || 'Thiago Rodrigues',
       tags: $('#f-tags').value.split(',').map((t) => t.trim()).filter(Boolean),
       coverAlt: $('#f-coveralt').value.trim(), slug: $('#f-slug').value.trim(),
@@ -206,7 +211,7 @@
   function fillForm(post) {
     const d = post.data || {};
     $('#f-title').value = d.title || ''; $('#f-desc').value = d.description || '';
-    $('#f-date').value = d.date ? String(d.date).slice(0, 10) : today();
+    $('#f-date').value = d.date ? String(d.date).slice(0, 10) : today(); $('#f-time').value = d.date && String(d.date).includes('T') ? String(d.date).slice(11, 16) : '';
     $('#f-cat').value = d.category || ''; $('#f-author').value = d.author || 'Thiago Rodrigues';
     $('#f-tags').value = Array.isArray(d.tags) ? d.tags.join(', ') : '';
     $('#f-coveralt').value = d.coverAlt || ''; $('#f-slug').value = post.slug || '';
@@ -218,7 +223,14 @@
     $('#status').textContent = post.isNew ? 'Nova postagem' : 'Editando: ' + post.slug;
     $('.split').dataset.tab = 'w';
     $('#tab-w').setAttribute('aria-selected', 'true'); $('#tab-p').setAttribute('aria-selected', 'false');
-    renderPreview();
+    updateSched(); renderPreview();
+  }
+
+  function updateSched() {
+    const d = readForm(); const fut = /^\d{4}-\d{2}-\d{2}$/.test(d.date) && isFuture(fullDate(d));
+    $('#btn-publish').textContent = fut ? 'Agendar' : 'Publicar';
+    const h = $('#sched-hint'); h.hidden = !fut;
+    if (fut) h.textContent = 'Agendada para ' + fmtBR(fullDate(d)) + ' (horário de Brasília). Aparece no site sozinha; o site é atualizado de hora em hora, então pode levar até 1 hora depois do horário.';
   }
 
   // ---------- imagens ----------
@@ -247,14 +259,14 @@
       const t = await gh('contents/' + encodeURI(f.path) + ref(), { raw: true });
       return { slug: f.name.replace(/\.md$/, ''), path: f.path, data: parseFM(t).data };
     }));
-    S.posts.sort((a, b) => String(b.data.date).localeCompare(String(a.data.date)));
+    S.posts.sort((a, b) => toDateObj(b.data.date) - toDateObj(a.data.date));
     renderList();
     $('#cats').innerHTML = [...new Set(S.posts.map((p) => p.data.category).filter(Boolean))].map((c) => `<option value="${esc(c)}">`).join('');
   }
   function renderList() {
     const box = $('#post-list');
     if (!S.posts.length) { box.innerHTML = '<p class="muted">Nenhuma postagem ainda. Clique em “Nova postagem”.</p>'; return; }
-    box.innerHTML = S.posts.map((p, i) => `<div class="item"><div><h2>${esc(p.data.title || p.slug)}${p.data.draft ? '<span class="badge">rascunho</span>' : ''}</h2><span class="muted small">${esc(String(p.data.date).slice(0, 10))} · ${esc(p.data.category || '')}</span></div><button type="button" data-i="${i}">Editar</button></div>`).join('');
+    box.innerHTML = S.posts.map((p, i) => `<div class="item"><div><h2>${esc(p.data.title || p.slug)}${p.data.draft ? '<span class="badge">rascunho</span>' : isFuture(p.data.date) ? '<span class="badge">agendada</span>' : ''}</h2><span class="muted small">${esc(isFuture(p.data.date) || String(p.data.date).includes('T') ? fmtBR(p.data.date) : String(p.data.date).slice(0, 10))} · ${esc(p.data.category || '')}</span></div><button type="button" data-i="${i}">Editar</button></div>`).join('');
   }
   async function openPost(i) {
     const p = S.posts[i]; toast('Abrindo…', false, 1500);
@@ -276,6 +288,7 @@
     if (S.busy) return;
     const d = readForm(); const body = getBody();
     if (S.cur.isNew && !$('#f-slug').dataset.manual) d.slug = slugify(d.title);
+    const fut = isFuture(fullDate(d));
     const err = !d.title ? 'Escreva um título.' : !d.description ? 'Escreva o resumo.' : !d.category ? 'Informe a categoria.' : !/^\d{4}-\d{2}-\d{2}$/.test(d.date) ? 'Informe a data.' : !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(d.slug) ? 'O endereço deve ter só letras minúsculas, números e hífens.' : S.cover && !d.coverAlt ? 'Descreva a imagem de capa (para acessibilidade).' : '';
     if (err) { toast(esc(err), true); return; }
     setBusy(true); toast('Enviando para o GitHub…', false, 0);
@@ -289,15 +302,15 @@
       let coverPath = S.cover ? S.cover.path : '';
       if (S.cover && S.cover.name) { used.add(S.cover.name); coverPath = IMG_REL + S.cover.name; }
       for (const name of used) { const p = S.pending.get(name); if (!p) continue; await putFile(`${IMG_DIR}/${name}`, await b64FromBlob(p.blob), 'Imagem: ' + d.title); S.pending.delete(name); }
-      const fm = Object.assign({}, d, { format: S.fmt, cover: coverPath || '', draft: asDraft, originalUrl: S.cur.extra.originalUrl, updated: S.cur.isNew ? '' : today() });
+      const fm = Object.assign({}, d, { date: fullDate(d), format: S.fmt, cover: coverPath || '', draft: asDraft, originalUrl: S.cur.extra.originalUrl, updated: S.cur.isNew ? '' : today() });
       const text = buildFM(fm, S.cur.extra) + '\n\n' + body.replace(/\s+$/, '') + '\n';
-      const res = await putFile(path, b64FromText(text), (asDraft ? 'Rascunho: ' : S.cur.isNew ? 'Publicar: ' : 'Atualizar: ') + d.title, S.cur.sha);
+      const res = await putFile(path, b64FromText(text), (asDraft ? 'Rascunho: ' : fut ? 'Agendar: ' : S.cur.isNew ? 'Publicar: ' : 'Atualizar: ') + d.title, S.cur.sha);
       S.cur = { isNew: false, path, sha: res.content.sha, extra: Object.assign({}, S.cur.extra, { originalUrl: S.cur.extra.originalUrl }) };
       if (S.cover && S.cover.name) S.cover = { path: coverPath };
       $('#f-slug').readOnly = true; $('#btn-delete').hidden = false; $('#status').textContent = 'Editando: ' + d.slug;
       try { localStorage.removeItem(LS_DRAFT); } catch { /* ignora */ }
       const actions = `https://github.com/${cfg.owner}/${cfg.repo}/actions`;
-      toast(asDraft ? 'Rascunho salvo no GitHub. Não aparece no site.' : `Publicado! O site atualiza em 1 a 3 minutos. <a href="${actions}" target="_blank" rel="noopener">Acompanhar</a> · <a href="../artigos/${esc(d.slug)}/" target="_blank" rel="noopener">Ver no site</a>`, false, 14000);
+      toast(asDraft ? 'Rascunho salvo no GitHub. Não aparece no site.' : fut ? `Agendada para ${esc(fmtBR(fullDate(d)))}. Aparece no site sozinha, em até 1 hora depois desse horário.` : `Publicado! O site atualiza em 1 a 3 minutos. <a href="${actions}" target="_blank" rel="noopener">Acompanhar</a> · <a href="../artigos/${esc(d.slug)}/" target="_blank" rel="noopener">Ver no site</a>`, false, 14000);
     } catch (e) { toast(esc(e.message), true, 0); } finally { setBusy(false); }
   }
   async function del() {
@@ -311,7 +324,7 @@
   // ---------- toolbar ----------
   function wrap(a, b = a, ph = '') { const t = $('#f-body'); const s = t.selectionStart, e = t.selectionEnd; const sel = t.value.slice(s, e) || ph; t.setRangeText(a + sel + b, s, e, 'end'); t.focus(); onInput(); }
   function linePrefix(p) { const t = $('#f-body'); let s = t.selectionStart; const st = t.value.lastIndexOf('\n', s - 1) + 1; t.setRangeText(p, st, st, 'end'); t.focus(); onInput(); }
-  function onInput() { renderPreview(); try { const d = readForm(); localStorage.setItem(LS_DRAFT, JSON.stringify(Object.assign({}, d, { body: getBody(), fmt: S.fmt }))); } catch { /* ignora */ } }
+  function onInput() { updateSched(); renderPreview(); try { const d = readForm(); localStorage.setItem(LS_DRAFT, JSON.stringify(Object.assign({}, d, { body: getBody(), fmt: S.fmt }))); } catch { /* ignora */ } }
 
   // ---------- eventos ----------
   $('#conn-form').addEventListener('submit', async (e) => {
@@ -332,7 +345,7 @@
   $('#btn-delete').addEventListener('click', del);
   $('#f-title').addEventListener('input', () => { const s = $('#f-slug'); if (!s.dataset.manual && !s.readOnly) s.value = slugify($('#f-title').value); });
   $('#f-slug').addEventListener('input', () => { $('#f-slug').dataset.manual = '1'; });
-  document.querySelectorAll('#f-title,#f-desc,#f-date,#f-cat,#f-tags,#f-author,#f-coveralt,#f-body').forEach((el) => el.addEventListener('input', onInput));
+  document.querySelectorAll('#f-title,#f-desc,#f-date,#f-time,#f-cat,#f-tags,#f-author,#f-coveralt,#f-body').forEach((el) => el.addEventListener('input', onInput));
   $('#f-cover').addEventListener('change', async (e) => { const f = e.target.files[0]; if (!f) return; try { const { name, url } = await addImage(f); setCover({ name, url, path: IMG_REL + name }); renderPreview(); } catch (er) { toast(esc(er.message), true); } e.target.value = ''; });
   $('#btn-cover-rm').addEventListener('click', () => { setCover(null); renderPreview(); });
   $('#f-img').addEventListener('change', async (e) => { const f = e.target.files[0]; if (!f) return; try { const { name } = await addImage(f); const alt = prompt('Descreva a imagem (para leitores de tela):', '') || ''; wrap(`\n\n![${alt}](${IMG_REL}${name})\n\n`, '', ''); } catch (er) { toast(esc(er.message), true); } e.target.value = ''; });
@@ -390,6 +403,7 @@
 
   // ---------- início ----------
   (async function init() {
+    try { localStorage.setItem('skipgc', 't'); } catch { /* ignora */ } // GoatCounter: não contar as visitas deste navegador
     if (!cfg || !cfg.token) { $('#btn-conn').click(); return; }
     try { await loadPosts(); show('list'); } catch (e) { toast(esc(e.message), true, 0); $('#btn-conn').click(); }
   })();

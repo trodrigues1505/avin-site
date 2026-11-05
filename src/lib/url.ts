@@ -20,4 +20,4 @@ export function readingTime(text: string): number {
 }
 
 export const fmtDate = (d: Date) =>
-  new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(d);
+  new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' }).format(d);

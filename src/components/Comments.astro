@@ -1,0 +1,21 @@
+---
+import { SITE } from '../config/site';
+const { slug, title } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+---
+{SITE.cusdisAppId && (
+  <section class="comments" aria-labelledby="comentarios">
+    <h2 id="comentarios">Comentários</h2>
+    <p class="muted small">Não é preciso ter conta. Os comentários passam por aprovação antes de aparecerem.</p>
+    <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id={SITE.cusdisAppId} data-page-id={slug} data-page-url={pageUrl} data-page-title={title} data-theme="light"></div>
+    <script is:inline>
+      (function () {
+        var t = document.getElementById('cusdis_thread'); if (!t) return;
+        function load() { var s = document.createElement('script'); s.async = true; s.defer = true; s.src = 'https://cusdis.com/js/cusdis.es.js'; document.body.appendChild(s); }
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { o.disconnect(); load(); } }, { rootMargin: '300px' }).observe(t);
+        } else load();
+      })();
+    </script>
+  </section>
+)}
