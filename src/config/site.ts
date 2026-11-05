@@ -2,7 +2,7 @@
 
 // Contador de visitas (GoatCounter): o "código" é o começo do endereço do painel.
 // Ex.: se o painel é https://avin.goatcounter.com, o código é 'avin'. Vazio = desligado.
-const GOATCOUNTER_CODE = '';
+const GOATCOUNTER_CODE = 'aventurasinacabadas';
 // Comentários (Cusdis): o "App ID" aparece no painel do Cusdis, em Embed Code. Vazio = desligado.
 const CUSDIS_APP_ID = '';
 export const SITE = {
