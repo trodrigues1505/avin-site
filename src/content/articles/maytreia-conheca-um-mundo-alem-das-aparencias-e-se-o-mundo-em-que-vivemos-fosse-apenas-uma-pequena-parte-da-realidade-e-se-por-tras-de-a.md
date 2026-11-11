@@ -2,12 +2,12 @@
 title: "Maytréia: conheça um mundo além das aparências  E se o mundo em que vivemos fosse apenas uma pequena parte da realidade? E se, por trás de a"
 description: "O que significa ser um Iniciado? E se aquilo que enxergamos todos os dias fosse apenas uma pequena parte da realidade?\n\nNo primeiro capítulo de Maytréia — Loja Aurora, conhecemos oito jovens que chegaram à misteriosa Loja Aurora em busca de respostas. Recebidos por Mãe Lidiane, eles descobriram que"
 date: 2026-11-06
+updated: 2026-11-11
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia","Maytreia HQ","HQ"]
 cover: "../../assets/posts/maytreia-conheca-um-mundo-alem-das-aparencias-e-se-o-mundo-em-que-vivemos-fosse-apenas-uma-pequena-parte-da-realidade-e-se-por-tras-de-a-qlo30.png"
 coverAlt: "capa"
-draft: true
 format: "html"
 ---
 
