@@ -6,7 +6,7 @@ const GOATCOUNTER_CODE = 'aventurasinacabadas';
 // Comentários: escolha UM serviço em COMMENTS_PROVIDER ('disqus', 'commentbox' ou 'cusdis') e preencha o código dele.
 // Vazio = comentários desligados. Veja docs/VISITAS_E_COMENTARIOS.md.
 const COMMENTS_PROVIDER: 'disqus' | 'commentbox' | 'cusdis' = 'disqus';
-const DISQUS_SHORTNAME = ''; // "shortname" do seu site no Disqus (ex.: 'aventurasinacabadas')
+const DISQUS_SHORTNAME = 'https-trodrigues1505-github-io-avin-site';
 const COMMENTBOX_PROJECT_ID = ''; // "Project ID" do painel do CommentBox.io
 const CUSDIS_APP_ID = ''; // "App ID" do painel do Cusdis (Embed Code)
 export const SITE = {
