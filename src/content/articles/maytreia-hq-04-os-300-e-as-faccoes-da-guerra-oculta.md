@@ -2,6 +2,7 @@
 title: "Maytréia HQ #04 — Os 300 e as Facções da Guerra Oculta"
 description: "E se as pessoas mais poderosas do mundo não estivessem interessadas apenas em dinheiro, influência ou poder político, mas também em controlar a maneira como a humanidade percebe a realidade?"
 date: 2026-11-15
+updated: 2026-11-11
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia HQ","HQ","Maytreia"]
