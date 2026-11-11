@@ -1,7 +1,7 @@
 ---
 title: "Maytréia HQ  #02 — Além das Aparências"
 description: "O que significa ser um Iniciado? E se aquilo que enxergamos todos os dias fosse apenas uma pequena parte da realidade?\n\nNo primeiro capítulo de Maytréia — Loja Aurora, conhecemos oito jovens que chegaram à misteriosa Loja Aurora em busca de respostas."
-date: 2026-11-06
+date: 2026-11-13
 updated: 2026-11-11
 author: "Thiago Rodrigues"
 category: "Material"
