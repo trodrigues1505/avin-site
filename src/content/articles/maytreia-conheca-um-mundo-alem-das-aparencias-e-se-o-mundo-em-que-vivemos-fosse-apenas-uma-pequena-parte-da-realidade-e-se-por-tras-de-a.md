@@ -1,5 +1,5 @@
 ---
-title: "Maytréia: conheça um mundo além das aparências"
+title: "Maytréia HQ — Capítulo 2: Além das Aparências"
 description: "O que significa ser um Iniciado? E se aquilo que enxergamos todos os dias fosse apenas uma pequena parte da realidade?\n\nNo primeiro capítulo de Maytréia — Loja Aurora, conhecemos oito jovens que chegaram à misteriosa Loja Aurora em busca de respostas."
 date: 2026-11-06
 updated: 2026-11-11
