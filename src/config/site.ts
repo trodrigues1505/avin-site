@@ -3,9 +3,10 @@
 // Contador de visitas (GoatCounter): o "código" é o começo do endereço do painel.
 // Ex.: se o painel é https://avin.goatcounter.com, o código é 'avin'. Vazio = desligado.
 const GOATCOUNTER_CODE = 'aventurasinacabadas';
-// Comentários: escolha UM serviço em COMMENTS_PROVIDER ('commentbox' ou 'cusdis') e preencha o código dele.
+// Comentários: escolha UM serviço em COMMENTS_PROVIDER ('disqus', 'commentbox' ou 'cusdis') e preencha o código dele.
 // Vazio = comentários desligados. Veja docs/VISITAS_E_COMENTARIOS.md.
-const COMMENTS_PROVIDER: 'commentbox' | 'cusdis' = 'commentbox';
+const COMMENTS_PROVIDER: 'disqus' | 'commentbox' | 'cusdis' = 'disqus';
+const DISQUS_SHORTNAME = ''; // "shortname" do seu site no Disqus (ex.: 'aventurasinacabadas')
 const COMMENTBOX_PROJECT_ID = ''; // "Project ID" do painel do CommentBox.io
 const CUSDIS_APP_ID = ''; // "App ID" do painel do Cusdis (Embed Code)
 export const SITE = {
@@ -22,10 +23,12 @@ export const SITE = {
   oldBlogUrl: 'https://aventurasinacabadas.blogspot.com/',
   goatcounter: GOATCOUNTER_CODE || import.meta.env.PUBLIC_GOATCOUNTER || '',
   commentsProvider: COMMENTS_PROVIDER,
+  disqusShortname: DISQUS_SHORTNAME || import.meta.env.PUBLIC_DISQUS_SHORTNAME || '',
   commentboxId: COMMENTBOX_PROJECT_ID || import.meta.env.PUBLIC_COMMENTBOX_ID || '',
   cusdisAppId: CUSDIS_APP_ID || import.meta.env.PUBLIC_CUSDIS_APP_ID || '',
 };
-export const COMMENTS_ON = COMMENTS_PROVIDER === 'cusdis' ? !!SITE.cusdisAppId : !!SITE.commentboxId;
+export const COMMENTS_ON =
+  COMMENTS_PROVIDER === 'disqus' ? !!SITE.disqusShortname : COMMENTS_PROVIDER === 'cusdis' ? !!SITE.cusdisAppId : !!SITE.commentboxId;
 
 export const NAV = [
   { label: 'Início', href: '' },

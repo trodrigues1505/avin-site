@@ -4,6 +4,7 @@ import { SITE, COMMENTS_ON } from '../config/site';
 const gc = !!SITE.goatcounter;
 const cm = COMMENTS_ON;
 const cbx = SITE.commentsProvider === 'commentbox';
+const dsq = cm && SITE.commentsProvider === 'disqus';
 ---
 <Base title="Política de Privacidade" description="Como o Aventuras Inacabadas trata dados: sem anúncios, sem rastreadores e sem cadastro.">
   <div class="wrap">
@@ -12,15 +13,15 @@ const cbx = SITE.commentsProvider === 'commentbox';
       <p>Atualizada em 4 de novembro de 2026.</p>
     </div>
     <div class="prose" style="margin-inline:0">
-      <p>Esta política explica quais informações o Aventuras Inacabadas coleta, como as usa e quais são os seus direitos. Resumindo: este site não pede cadastro, não exibe anúncios e não usa cookies de rastreamento nem monta perfis dos visitantes.</p>
+      <p>Esta política explica quais informações o Aventuras Inacabadas coleta, como as usa e quais são os seus direitos. Resumindo: {dsq ? 'o site em si não pede cadastro, não exibe anúncios próprios e não usa estatísticas que identifiquem você. A caixa de comentários, fornecida pelo Disqus, é a exceção e está explicada abaixo.' : 'este site não pede cadastro, não exibe anúncios e não usa cookies de rastreamento nem monta perfis dos visitantes.'}</p>
 
       <h2>O que o site não faz</h2>
       <ul>
         <li>Não exige login, cadastro nem preenchimento de formulários.</li>
         {!cm && <li>Não tem comentários.</li>}
         <li>Não usa Google Analytics{!gc && ' nem outro serviço de estatísticas de terceiros'}.</li>
-        <li>Não exibe anúncios, inclusive do Google AdSense.</li>
-        <li>Não define cookies próprios para rastrear a sua navegação.</li>
+        {!dsq && <li>Não exibe anúncios, inclusive do Google AdSense.</li>}
+        {dsq ? <li>Não exibe anúncios próprios nem usa o Google AdSense.</li> : <li>Não define cookies próprios para rastrear a sua navegação.</li>}
       </ul>
 
       <h2>Contato por e-mail</h2>
@@ -36,7 +37,9 @@ const cbx = SITE.commentsProvider === 'commentbox';
 
       {cm && (<>
         <h2>Comentários</h2>
-        {cbx
+        {dsq
+          ? <p>Os comentários das postagens são fornecidos pelo Disqus, um serviço externo. A caixa de comentários só é carregada quando você chega ao fim da postagem. Quando carregada, o Disqus pode definir cookies, coletar dados de navegação e exibir anúncios, conforme a política de privacidade do próprio Disqus, disponível no site deles. Para comentar, o Disqus pode pedir que você entre com uma conta dele ou permitir comentários como visitante, se o autor tiver habilitado essa opção. Os comentários publicados ficam visíveis com o nome informado. Você pode gerenciar ou apagar os seus comentários pela sua conta no Disqus ou pedir a remoção escrevendo para o e-mail de contato. Se não quiser que o Disqus trate dados sobre você, não abra a caixa de comentários.</p>
+          : cbx
           ? <p>Os comentários das postagens são processados pelo CommentBox.io, um serviço externo. Ao comentar, você envia a ele as informações que digitar no formulário, como nome ou apelido, e-mail (se você entrar com uma conta) e o texto, conforme as opções que o serviço oferecer. Os comentários são moderados pelo autor e, depois de publicados, ficam visíveis junto com o nome ou apelido informado. Para pedir a remoção de um comentário seu, escreva para o e-mail de contato. A caixa de comentários só é carregada quando você chega ao fim da postagem.</p>
           : <p>Os comentários das postagens são processados pelo Cusdis, que não usa cookies de rastreamento nem exige conta. Ao comentar, você envia ao Cusdis as informações que digitar no formulário, como nome ou apelido, e-mail (se o formulário pedir) e o texto. Os comentários passam por aprovação antes de aparecerem, e o texto aprovado fica público junto com o nome ou apelido informado. Para pedir a remoção de um comentário seu, escreva para o e-mail de contato. A caixa de comentários só é carregada quando você chega ao fim da postagem.</p>}
       </>)}

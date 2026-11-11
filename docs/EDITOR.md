@@ -1,6 +1,7 @@
 # Editor de postagens
 
 Endereço: `https://trodrigues1505.github.io/avin-site/editor/` (não aparece no menu nem no Google).
+Atalhos que levam ao mesmo lugar: `/edit/` e `/admin/`. Se digitar sem a barra final e der erro, use a barra.
 
 ## Como funciona
 

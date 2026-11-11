@@ -18,11 +18,28 @@ outros aparelhos, abra o `/editor/` neles uma vez.
 
 ## 2. Comentários (você escolhe o serviço)
 
-Em `src/config/site.ts`, `COMMENTS_PROVIDER` define qual serviço é usado: `'commentbox'` ou `'cusdis'`.
+Em `src/config/site.ts`, `COMMENTS_PROVIDER` define qual serviço é usado: `'disqus'`, `'commentbox'` ou `'cusdis'`.
 Em qualquer um, o leitor **não precisa de conta no GitHub**. A caixa só carrega quando o leitor chega ao fim
 da postagem e, se o serviço estiver fora do ar, aparece um aviso com o seu e-mail.
 
-### Opção A: CommentBox.io (configuração atual)
+### Opção A: Disqus (configuração atual)
+
+1. Crie a conta em https://disqus.com e escolha **"I want to install Disqus on my site"**. Dê um nome ao site.
+   O **shortname** que o Disqus mostra (ex.: `aventurasinacabadas`) é o que vai no código.
+2. Escolha o plano **Basic** (gratuito). Nele o Disqus exibe **anúncios** na área de comentários e você não
+   consegue desligá-los; o plano sem anúncios é pago (a partir de cerca de US$ 12 por mês, segundo comparativos
+   de terceiros; confira o preço atual no site deles).
+3. Nas configurações do Disqus, confira em **Community** se o comentário de **visitante** (sem conta) está
+   habilitado; sem isso o leitor precisa criar ou usar uma conta Disqus. Confira também se o domínio
+   `trodrigues1505.github.io` está na lista de **Trusted Domains**; se aparecer erro de domínio, é aí.
+4. Em `src/config/site.ts`, cole o shortname em `DISQUS_SHORTNAME` e faça o commit.
+
+Sobre privacidade: o Disqus pode definir cookies, coletar dados de navegação e exibir anúncios. Para reduzir o
+impacto, a caixa só carrega quando o leitor chega ao fim da postagem; quem não rola até lá não aciona o Disqus.
+A Política de Privacidade muda sozinha para descrever isso. O identificador de cada conversa é o endereço curto
+da postagem, então trocar o domínio do site não perde os comentários.
+
+### Opção B: CommentBox.io
 
 1. Crie a conta em https://dashboard.commentbox.io e crie um **projeto** para o seu site.
 2. Nas configurações do projeto, ative a opção de **comentário anônimo**, se quiser que o leitor comente
@@ -37,7 +54,7 @@ manutenção é incerta. Se parar de funcionar, troque para outra opção (abaix
 O script do plugin (Apache-2.0) fica em `public/vendor/`, então o site não depende de CDN de terceiros;
 só as chamadas de comentários vão ao serviço.
 
-### Opção B: Cusdis
+### Opção C: Cusdis
 
 1. Crie a conta em https://cusdis.com, adicione o site `trodrigues1505.github.io` e copie o `data-app-id`.
 2. `COMMENTS_PROVIDER = 'cusdis'` e cole o valor em `CUSDIS_APP_ID`.
