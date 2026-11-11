@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE } from '../config/site';
+import { SITE, COMMENTS_ON } from '../config/site';
 const gc = !!SITE.goatcounter;
-const cm = !!SITE.cusdisAppId;
+const cm = COMMENTS_ON;
+const cbx = SITE.commentsProvider === 'commentbox';
 ---
 <Base title="Política de Privacidade" description="Como o Aventuras Inacabadas trata dados: sem anúncios, sem rastreadores e sem cadastro.">
   <div class="wrap">
@@ -35,7 +36,9 @@ const cm = !!SITE.cusdisAppId;
 
       {cm && (<>
         <h2>Comentários</h2>
-        <p>Os comentários das postagens são processados pelo Cusdis, que não usa cookies de rastreamento nem exige conta. Ao comentar, você envia ao Cusdis as informações que digitar no formulário, como nome ou apelido, e-mail (se o formulário pedir) e o texto. Os comentários passam por aprovação antes de aparecerem, e o texto aprovado fica público junto com o nome ou apelido informado. Para pedir a remoção de um comentário seu, escreva para o e-mail de contato. A caixa de comentários só é carregada quando você chega ao fim da postagem.</p>
+        {cbx
+          ? <p>Os comentários das postagens são processados pelo CommentBox.io, um serviço externo. Ao comentar, você envia a ele as informações que digitar no formulário, como nome ou apelido, e-mail (se você entrar com uma conta) e o texto, conforme as opções que o serviço oferecer. Os comentários são moderados pelo autor e, depois de publicados, ficam visíveis junto com o nome ou apelido informado. Para pedir a remoção de um comentário seu, escreva para o e-mail de contato. A caixa de comentários só é carregada quando você chega ao fim da postagem.</p>
+          : <p>Os comentários das postagens são processados pelo Cusdis, que não usa cookies de rastreamento nem exige conta. Ao comentar, você envia ao Cusdis as informações que digitar no formulário, como nome ou apelido, e-mail (se o formulário pedir) e o texto. Os comentários passam por aprovação antes de aparecerem, e o texto aprovado fica público junto com o nome ou apelido informado. Para pedir a remoção de um comentário seu, escreva para o e-mail de contato. A caixa de comentários só é carregada quando você chega ao fim da postagem.</p>}
       </>)}
 
       <h2>Ferramentas e aplicativos</h2>

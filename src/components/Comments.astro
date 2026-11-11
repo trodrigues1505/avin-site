@@ -1,17 +1,31 @@
 ---
-import { SITE } from '../config/site';
+import { SITE, COMMENTS_ON } from '../config/site';
+import { url } from '../lib/url';
 const { slug, title } = Astro.props;
+const cb = SITE.commentsProvider === 'commentbox';
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const targetId = cb ? 'commentbox' : 'cusdis_thread';
+const scriptSrc = cb ? url('vendor/commentBox.min.js') : 'https://cusdis.com/js/cusdis.es.js';
 ---
-{SITE.cusdisAppId && (
+{COMMENTS_ON && (
   <section class="comments" aria-labelledby="comentarios">
     <h2 id="comentarios">Comentários</h2>
-    <p class="muted small">Não é preciso ter conta. Os comentários passam por aprovação antes de aparecerem.</p>
-    <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id={SITE.cusdisAppId} data-page-id={slug} data-page-url={pageUrl} data-page-title={title} data-theme="light"></div>
-    <script is:inline>
+    <p class="muted small">{cb ? 'Não é preciso ter conta no GitHub. Os comentários são moderados pelo autor do site.' : 'Não é preciso ter conta. Os comentários passam por aprovação antes de aparecerem.'}</p>
+    {cb
+      ? <div id="commentbox" class="commentbox"></div>
+      : <div id="cusdis_thread" data-host="https://cusdis.com" data-app-id={SITE.cusdisAppId} data-page-id={slug} data-page-url={pageUrl} data-page-title={title} data-theme="light"></div>}
+    <p id="cm-fallback" class="muted small" hidden>Os comentários estão indisponíveis no momento. Se quiser, escreva para <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.</p>
+    <script is:inline define:vars={{ targetId, scriptSrc, cb, pid: SITE.commentboxId }}>
       (function () {
-        var t = document.getElementById('cusdis_thread'); if (!t) return;
-        function load() { var s = document.createElement('script'); s.async = true; s.defer = true; s.src = 'https://cusdis.com/js/cusdis.es.js'; document.body.appendChild(s); }
+        var t = document.getElementById(targetId); if (!t) return;
+        var done = false;
+        function fail() { var f = document.getElementById('cm-fallback'); if (f && !done && !t.children.length) f.hidden = false; }
+        function load() {
+          var s = document.createElement('script'); s.async = true; s.defer = true; s.src = scriptSrc;
+          s.onerror = fail;
+          if (cb) s.onload = function () { try { window.commentBox(pid, { className: 'commentbox', defaultBoxId: 'commentbox' }); done = true; } catch (e) { fail(); } };
+          document.body.appendChild(s); setTimeout(function () { done = false; fail(); }, 10000);
+        }
         if ('IntersectionObserver' in window) {
           new IntersectionObserver(function (e, o) { if (e[0].isIntersecting) { o.disconnect(); load(); } }, { rootMargin: '300px' }).observe(t);
         } else load();

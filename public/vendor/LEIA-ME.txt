@@ -1,0 +1,2 @@
+commentBox.min.js: plugin do CommentBox.io (pacote npm "commentbox.io" 2.1.0), licença Apache-2.0 (ver commentbox.io-LICENSE.txt).
+Guardado aqui para o site não depender de um CDN de terceiros. Só é carregado se o CommentBox estiver ligado em src/config/site.ts.
