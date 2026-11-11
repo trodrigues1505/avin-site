@@ -48,14 +48,19 @@
   }
   async function gh(path, { method = 'GET', body, raw = false } = {}) {
     let r;
-    try { r = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}${path ? '/' + path : ''}`, {
+    const base = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}${path ? '/' + path : ''}`;
+    // Leituras levam um parâmetro único: o navegador não reaproveita respostas antigas (a API do GitHub é guardada em cache por ~1 min).
+    const target = method === 'GET' ? base + (base.includes('?') ? '&' : '?') + '_=' + Date.now() : base;
+    try { r = await fetch(target, {
       method,
       headers: Object.assign({ Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json', Authorization: 'Bearer ' + cfg.token, 'X-GitHub-Api-Version': '2022-11-28' }, body ? { 'Content-Type': 'application/json' } : {}),
       body: body ? JSON.stringify(body) : undefined,
     }); } catch { throw new Error('Não foi possível falar com o GitHub. Verifique a internet e se alguma extensão (bloqueador de anúncios) ou antivírus está bloqueando api.github.com.'); }
     if (!r.ok) { let m = ''; try { m = (await r.json()).message; } catch { /* sem corpo */ } const e = new Error(friendly(r.status, m)); e.status = r.status; throw e; }
     if (r.status === 204) return null;
-    return raw ? r.text() : r.json();
+    const txt = await r.text();
+    if (raw) return txt;
+    try { return JSON.parse(txt); } catch { throw new Error('Resposta inesperada do GitHub. Recarregue a página com Ctrl+F5 e tente de novo.'); }
   }
   const ref = () => '?ref=' + encodeURIComponent(cfg.branch);
   const putFile = (path, contentB64, message, sha) => gh('contents/' + encodeURI(path), { method: 'PUT', body: Object.assign({ message, content: contentB64, branch: cfg.branch }, sha ? { sha } : {}) });
@@ -256,8 +261,8 @@
     $('#post-list').innerHTML = '<p class="muted">Carregando…</p>';
     const files = await gh('contents/' + POSTS_DIR + ref());
     S.posts = await Promise.all(files.filter((f) => /\.md$/.test(f.name)).map(async (f) => {
-      const t = await gh('contents/' + encodeURI(f.path) + ref(), { raw: true });
-      return { slug: f.name.replace(/\.md$/, ''), path: f.path, data: parseFM(t).data };
+      const file = await gh('contents/' + encodeURI(f.path) + ref());
+      return { slug: f.name.replace(/\.md$/, ''), path: f.path, data: parseFM(textFromB64(file.content)).data };
     }));
     S.posts.sort((a, b) => toDateObj(b.data.date) - toDateObj(a.data.date));
     renderList();
