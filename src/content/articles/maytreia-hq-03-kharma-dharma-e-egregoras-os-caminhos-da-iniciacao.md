@@ -1,7 +1,7 @@
 ---
 title: "Maytréia HQ #03 — Kharma, Dharma e Egrégoras: os caminhos da Iniciação"
 description: "Nossas escolhas definem quem somos? E até que ponto nossos pensamentos, nossas ações e as pessoas com quem convivemos influenciam nosso caminho?"
-date: 2026-11-13
+date: "2026-11-23T09:50:00-03:00"
 updated: 2026-11-23
 author: "Thiago Rodrigues"
 category: "Material"
