@@ -1,7 +1,8 @@
 ---
 title: "Maytréia HQ #08 — O Preço de um Shiddi: a verdadeira vitória"
 description: "Ter poder significa estar preparado para utilizá-lo? E o que acontece quando alguém ultrapassa os próprios limites para enfrentar uma ameaça?"
-date: 2026-11-23
+date: 2026-11-13
+updated: 2026-11-23
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia HQ","HQ","Maytreia"]
