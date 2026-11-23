@@ -2,11 +2,13 @@
 title: "Maytréia HQ #07 — A Última Gravação: duas versões da realidade"
 description: "E se alguém pudesse alterar não apenas aquilo que você lembra, mas também a maneira como percebe o mundo ao seu redor?"
 date: 2026-11-21
+updated: 2026-11-23
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia HQ","HQ","Maytreia"]
 cover: "../../assets/posts/maytreia-hq-07-a-ultima-gravacao-duas-versoes-da-realidade-d7j2v.png"
 coverAlt: "capa"
+draft: true
 format: "html"
 ---
 
@@ -116,15 +118,15 @@ format: "html"
 
 <h3>Página 13 — A Última Gravação</h3>
 
-<p><strong>[INSERIR IMAGEM DA PÁGINA 13]</strong></p>
+<p><img src="../../posts-img/maytreia-hq-07-a-ultima-gravacao-duas-versoes-da-realidade-rleqn.png" alt="13" loading="lazy"></p>
 
 <h3>Página 14 — O Homem por Trás da Mentira</h3>
 
-<p><strong>[INSERIR IMAGEM DA PÁGINA 14]</strong></p>
+<p><img src="../../posts-img/maytreia-hq-07-a-ultima-gravacao-duas-versoes-da-realidade-qbl3q.png" alt="14" loading="lazy"></p>
 
 <h3>Página 15 — Duas Versões da Realidade</h3>
 
-<p><strong>[INSERIR IMAGEM DA PÁGINA 15]</strong></p>
+<p><img src="../../posts-img/maytreia-hq-07-a-ultima-gravacao-duas-versoes-da-realidade-x0hnc.png" alt="15" loading="lazy"></p>
 
 <h2>Na próxima semana: O Preço de um Shiddi</h2>
 
@@ -145,7 +147,3 @@ format: "html"
 <div><hr></div>
 
 <p><em>Maytréia — Loja Aurora é uma história em quadrinhos de apresentação do universo do RPG Maytréia, publicada semanalmente no Aventuras Inacabadas. A HQ explora os conceitos, a ambientação e os conflitos do cenário por meio das experiências de seus personagens.</em></p>
-
-<p><strong>Leia os capítulos anteriores:</strong></p>
-
-<ul><li><p><a href="INSERIR_LINK">Capítulo 1 — Bem-vindos à Loja Aurora</a></p></li><li><p><a href="INSERIR_LINK">Capítulo 2 — Além das Aparências</a></p></li><li><p><a href="INSERIR_LINK">Capítulo 3 — Kharma, Dharma e Egrégoras</a></p></li><li><p><a href="INSERIR_LINK">Capítulo 4 — Os 300 e as Facções da Guerra Oculta</a></p></li><li><p><a href="INSERIR_LINK">Capítulo 5 — Shiddis, Shakti e a Guerra Oculta</a></p></li><li><p><a href="INSERIR_LINK">Capítulo 6 — O Homem que Nunca Existiu</a></p></li></ul>
