@@ -2,6 +2,7 @@
 title: "Maytréia — Edição de Homenagem: baixe o livro em PDF"
 description: ": Um jogo de kharma e iluminação, de Danilo Faria, Renato Simões e Alex Genaro, agora com diagramação nova, 229 páginas e download liberado."
 date: 2026-11-27
+updated: 2026-11-26
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia","Livro","PDF","Download"]
