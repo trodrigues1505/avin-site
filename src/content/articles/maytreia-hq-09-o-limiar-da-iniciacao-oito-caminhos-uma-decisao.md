@@ -2,6 +2,7 @@
 title: "Maytréia HQ #09 — O Limiar da Iniciação: oito caminhos, uma decisão"
 description: "O que acontece quando tudo aquilo em que acreditávamos começa a mudar? E o que fazemos quando descobrimos uma verdade que não podemos simplesmente ignorar?"
 date: 2026-11-25
+updated: 2026-11-26
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia HQ","HQ","Maytreia"]
@@ -126,9 +127,9 @@ format: "html"
 
 <p>Foram 20 páginas acompanhando os primeiros passos de oito postulantes, desde sua chegada à Loja Aurora até a decisão de permanecerem juntos e seguir o caminho da Iniciação.</p>
 
-<p>Para quem chegou agora ou prefere acompanhar toda a história sem interrupções, também disponibilizo a HQ completa em PDF, com capa e todas as páginas reunidas.</p>
+<p>Para quem chegou agora ou prefere acompanhar toda a história sem interrupções, também disponibilizo a <a href="https://drive.google.com/file/d/19eWJh8J6Mx9DrGXKEv3ojKmqw8Cv9pscK/view?usp=sharing">HQ completa em PDF</a>, com capa e todas as páginas reunidas.</p>
 
-<p><a href="https://drive.google.com/file/d/14BASsXHIjb4xMmKJQITuD3COJjBKaGMH/view?usp=sharing">https://drive.google.com/file/d/14BASsXHIjb4xMmKJQITuD3COJjBKaGMH/view?usp=sharing</a><br></p>
+<p><br></p>
 
 <h2>O fim de um volume. O começo de uma jornada.</h2>
 
