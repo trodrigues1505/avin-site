@@ -2,13 +2,12 @@
 title: "Maytréia HQ #07 — A Última Gravação: duas versões da realidade"
 description: "E se alguém pudesse alterar não apenas aquilo que você lembra, mas também a maneira como percebe o mundo ao seu redor?"
 date: 2026-11-21
-updated: 2026-11-23
+updated: 2026-11-26
 author: "Thiago Rodrigues"
 category: "Material"
 tags: ["Maytreia HQ","HQ","Maytreia"]
 cover: "../../assets/posts/maytreia-hq-07-a-ultima-gravacao-duas-versoes-da-realidade-d7j2v.png"
 coverAlt: "capa"
-draft: true
 format: "html"
 ---
 
